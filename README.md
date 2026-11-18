@@ -26,6 +26,8 @@ sujets/sujet3/
   s3_1_recuit_simule.ipynb      Q1-Q4 : code, figures, commentaires chiffrés
   s3_1_explique.ipynb           le même sujet expliqué depuis zéro (exercices, réponses orales)
   questions_oral.md, fiche_revision.md, matlab_python.md
+  matlab/                       le même TD en Matlab (s3_recuit_simule.m + recuit.m, testé sous Octave 8.4)
+                                et son équivalent Python ligne à ligne (s3_recuit_simule.py)
 src/stats_td/                   générateurs (inversion, Box-Muller), répartitions empiriques, optimisation (gradient, recuit)
 tests/                          tests statistiques (moyennes, variances, Kolmogorov-Smirnov, pente)
 ```

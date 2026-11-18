@@ -6,3 +6,4 @@ rendu/sources/*.aux
 rendu/sources/*.log
 rendu/sources/*.out
 rendu/sources/*.pdf
+sujets/sujet3/matlab/*.svg

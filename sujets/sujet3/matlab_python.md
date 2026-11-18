@@ -13,5 +13,9 @@
 | Tracer, superposer | `plot(y, h); hold on; plot(x, h(x), 'o'); hold off` | `ax.plot(y, h); ax.plot(x, h_x, "o")` | En matplotlib, tracer sur le même `ax` superpose (pas de `hold`) |
 | Graine | `rng(2026)` | `np.random.default_rng(2026)` | Les deux générateurs ne donnent pas les mêmes tirages |
 
+Script Matlab complet : [`matlab/s3_recuit_simule.m`](matlab/s3_recuit_simule.m) (+ `matlab/recuit.m`),
+exécuté sous GNU Octave 8.4 ; équivalent Python ligne à ligne : [`matlab/s3_recuit_simule.py`](matlab/s3_recuit_simule.py)
+(mêmes chiffres que le notebook). Comparaison des sorties : page 4 du PDF.
+
 Le code réutilisable est dans `src/stats_td/optimisation.py` (`gradient_simple`,
 `recuit_simule`, `h_sujet3`, `dh_sujet3`).

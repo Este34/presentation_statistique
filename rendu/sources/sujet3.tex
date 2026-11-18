@@ -7,6 +7,7 @@
 \usepackage{polyglossia}\setmainlanguage{french}
 \usepackage{amsmath,amssymb,icomma}
 \usepackage{graphicx,xcolor,booktabs,tabularx,array,listings,fancyhdr,enumitem,tcolorbox}
+\usepackage{lastpage}
 \usepackage[hidelinks]{hyperref}
 
 \definecolor{violet8}{HTML}{842577}
@@ -22,7 +23,7 @@
 \renewcommand{\headrulewidth}{0pt}
 \fancyhead[L]{\includegraphics[height=0.55cm]{paris8.png}}
 \fancyhead[R]{\small\color{gris8}Statistiques et Analyse de Données · TP3}
-\fancyfoot[C]{\small\color{gris8}\thepage\,/\,\pageref{fin}}
+\fancyfoot[C]{\small\color{gris8}\thepage\,/\,\pageref{LastPage}}
 
 \newcommand{\barre}{{\color{violet8}\rule{0.55\linewidth}{0.6pt}}{\color{rouge8}\rule{0.45\linewidth}{0.6pt}}}
 \newcommand{\question}[1]{\vspace{0.5em}{\large\bfseries\color{violet8}#1}\par\vspace{0.25em}}
@@ -187,5 +188,112 @@ $x_0$. Le recuit échappe aux minima locaux au prix de réglages délicats et d'
 aléatoire. En pratique on les combine : recuit pour explorer, puis gradient depuis le meilleur
 point visité pour affiner, ou plusieurs recuits indépendants (avec 2 lancers, l'échec tombe à
 $0{,}262^2 \approx 7$~\%).
+
+\newpage
+\question{Annexe · Le même TD en Matlab et en Python}
+Les fonctions citées par l'énoncé (\texttt{for}, \texttt{rand}, \texttt{min}, \texttt{if},
+\texttt{plot}, \texttt{hold on}) sont des fonctions Matlab : voici le cœur du TD écrit dans les deux
+langages, ligne à ligne. Le script Matlab a été \textbf{exécuté} avec GNU Octave 8.4 (logiciel libre
+compatible Matlab). Scripts complets dans le dossier \texttt{sujets/sujet3/matlab/} du dépôt.
+
+\lstdefinestyle{petit}{basicstyle=\ttfamily\footnotesize}
+\noindent
+\begin{minipage}[t]{0.495\linewidth}
+{\small\bfseries\color{violet8}Matlab / Octave}
+\begin{lstlisting}[language=Matlab,style=petit]
+h  = @(x) x.^2 + 3*x.*cos(x);
+dh = @(x) 2*x + 3*cos(x) - 3*x.*sin(x);
+y = linspace(-8*pi, 8*pi, 5000);
+[m, i] = min(h(y));             % Q1
+
+xg = zeros(1, N+1);  xg(1) = 7.5;  % Q2
+for n = 1:N
+  xg(n+1) = xg(n) - 0.025/n*dh(xg(n));
+end
+
+function x = recuit(h, x0, N, T0, alpha, a, b)
+  x = zeros(1, N+1); x(1) = x0; hx = h(x0);
+  for n = 1:N                     % Q3
+    T = T0 * alpha^n;
+    z = x(n) - pi/2 + pi*rand;
+    u = rand;
+    x(n+1) = x(n);                % refus
+    if z >= a && z <= b
+      hz = h(z);
+      if hz <= hx || u < exp(-(hz-hx)/T)
+        x(n+1) = z;  hx = hz;     % accepté
+      end
+    end
+  end
+end
+\end{lstlisting}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.495\linewidth}
+{\small\bfseries\color{violet8}Python (numpy)}
+\begin{lstlisting}[style=petit]
+h  = lambda x: x**2 + 3*x*np.cos(x)
+dh = lambda x: 2*x + 3*np.cos(x) - 3*x*np.sin(x)
+y = np.linspace(-8*np.pi, 8*np.pi, 5000)
+i = np.argmin(h(y)); m = h(y)[i]  # Q1
+
+xg = np.zeros(N+1); xg[0] = 7.5    # Q2
+for n in range(1, N+1):
+    xg[n] = xg[n-1] - 0.025/n*dh(xg[n-1])
+
+
+def recuit(x0, N, T0, alpha, rng):
+    x = np.zeros(N+1); x[0] = x0; hx = h(x0)
+    for n in range(1, N+1):         # Q3
+        T = T0 * alpha**n
+        z = x[n-1] + rng.uniform(-np.pi/2, np.pi/2)
+        u = rng.random()
+        x[n] = x[n-1]               # refus
+        if a <= z <= b:
+            hz = h(z)
+            if hz <= hx or u < np.exp(-(hz-hx)/T):
+                x[n], hx = z, hz    # accepté
+    return x
+\end{lstlisting}
+\end{minipage}
+
+\vspace{0.3em}
+{\small Pièges de traduction : indices à partir de 1 en Matlab (\texttt{xg(1)} $=$ \texttt{xg[0]}) ;
+opérations pointées \texttt{.\^{}} et \texttt{.*} en Matlab ; \texttt{[m, i] = min(...)} donne
+aussi la position (\texttt{np.argmin} en Python) ; \texttt{hold on} n'existe pas en matplotlib (on
+trace deux fois sur le même \texttt{ax}).}
+
+\vspace{0.3em}
+\noindent
+\begin{minipage}[t]{0.495\linewidth}
+{\small\bfseries\color{violet8}Sortie Octave} {\small\color{gris8}(Mersenne Twister, graine 2026)}
+\begin{lstlisting}[language={},style=petit]
+Q1 grille : h(-0.6385) = -1.1304 ; x* = -0.6371
+Q2 gradient : x_N = 8.6606, h = 56.2483
+Q3 recuit : x_N = -0.6978, h = -1.1172
+Q4 : succès 0.736 +- 0.027 (IC 95 %)
+\end{lstlisting}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.495\linewidth}
+{\small\bfseries\color{violet8}Sortie Python} {\small\color{gris8}(PCG64, graine 2026)}
+\begin{lstlisting}[language={},style=petit]
+Q1 grille : h(-0.6385) = -1.1304 ; x* = -0.6371
+Q2 gradient : x_N = 8.6606, h = 56.2483
+Q3 recuit : x_N = -0.6503, h = -1.1298
+Q4 : succès 0.738 +- 0.027 (IC 95 %)
+\end{lstlisting}
+\end{minipage}
+
+\vspace{0.2em}
+\lecture Les parties \textbf{déterministes} donnent exactement les mêmes chiffres : minimum de la
+grille $h(-0{,}6385) = -1{,}1304$ et gradient $x_N = 8{,}6606$ ($h = 56{,}2483$) dans les deux
+langages. Pour le recuit, les deux logiciels n'utilisent pas le même générateur aléatoire : les
+tirages diffèrent, donc le lancer unique aussi (Octave finit en $-0{,}698$, Python en $-0{,}650$,
+tous deux dans le bassin du minimum global). Mais la \textbf{statistique} concorde : 73,6~\% contre
+73,8~\% de succès sur 1000 lancers, un écart de 0,10 erreur-type, sans aucune signification. On
+retrouve le même comportement quel que soit le langage : c'est l'algorithme qui compte.
+
+\vspace{-0.6em}
+\begin{center}\includegraphics[width=\linewidth,height=4.9cm,keepaspectratio]{../../sujets/sujet3/figures/s35_octave.png}\\[-0.2em]
+{\footnotesize\color{gris8}Figure tracée par le script Matlab sous Octave (\texttt{plot}, puis \texttt{hold on}).}\end{center}
 \label{fin}
 \end{document}
