@@ -1,6 +1,9 @@
 # Sujet 3 — Fiche de révision (recuit simulé)
 
 ## L'essentiel en 5 lignes
+
+**Message du TD** : atteindre *un* minimum local est simple (le gradient le fait à coup sûr) ; atteindre *le* minimum global est bien plus dur.
+
 1. $h(x) = x^2 + 3x\cos x$ n'est **pas convexe** : 9 minima locaux sur $[-8\pi, 8\pi]$, global en $x^\star = -0{,}637$.
 2. **Gradient** : on descend la pente, $x_{n+1} = x_n - \frac{0{,}025}{n}h'(x_n)$ → minimum **local** du bassin de $x_0$ (8,814), en $n^{-0{,}5}$.
 3. **Recuit** : on accepte parfois de monter, avec probabilité $e^{-\Delta h/T_n}$ ; $T$ grand = exploration, $T$ petit = descente.
@@ -33,6 +36,8 @@
 | Q4, écart final au global $h(x_N) - h(x^\star)$ | gradient 57,38 ; recuit $6{,}2\times10^{-4}$ |
 | Q4, recuit dans le bassin du global | dès $n = 250$, définitivement à $n = 617$ ; 266 montées acceptées |
 | Q4, Octave (autres tirages) | recuit $x_N = -0{,}698$, écart $1{,}3\times10^{-2}$ ; gradient identique |
+| Q4, 12 points de départ | gradient : minimum local 12/12, global 2/12 (seulement $x_0 = -2, 0$) ; recuit : global 9/12, sinon 2,80 |
+| part de l'intervalle dans le bassin du global | 10,6 % (entre les cols $-4{,}086$ et $1{,}227$) |
 | *(réserve)* recuit, 1000 lancers | global 73,8 % ± 2,7 % ; piège 25,9 % ± 2,7 % ; ailleurs 0,3 % |
 | refroidissement lent ($\alpha = 0{,}995$, $N = 2000$) | 77,0 % ± 4,1 % (écart 1,27 e.-t., non significatif) |
 | profondeur max $d^\star$ | 26,2 à petits pas, $\approx 12{,}3$ avec sauts $\pm\pi/2$ (minimum en $-24{,}44$) |

@@ -149,7 +149,7 @@ stationnaire se concentre sur les minima globaux.
 Même départ $x_0 = 7{,}5$, même budget de $N = 1000$ itérations : on compare la trajectoire du
 gradient (Q2) et celle du recuit (Q3). Le bassin du minimum global est l'intervalle entre les deux
 cols qui l'entourent, \mbox{$]-4{,}086 ; 1{,}227[$} (zone colorée à droite).
-\begin{center}\includegraphics[width=0.95\linewidth]{../../sujets/sujet3/figures/s34_comparaison.png}\end{center}
+\begin{center}\includegraphics[width=0.88\linewidth]{../../sujets/sujet3/figures/s34_comparaison.png}\end{center}
 \vspace{-0.4em}
 {\small
 \renewcommand{\arraystretch}{1.2}
@@ -185,9 +185,33 @@ $\alpha$, largeur de $g_n$), son analyse passe par les chaînes de Markov, et co
 une autre graine donne une autre trajectoire.
 \end{itemize}
 
-\textbf{Conclusion.} Le gradient est simple, rapide par itération et reproductible, mais prisonnier
-du bassin de $x_0$. Le recuit atteint le minimum global là où le gradient échoue, au prix de
-réglages et d'un coût un peu plus élevé. En pratique on les combine : recuit pour trouver le bon
+\textbf{Plusieurs points de départ.} Même expérience depuis 12 départs répartis sur l'intervalle
+(1000 itérations chacun ; minimum visé par le gradient identifié en prolongeant à $10^5$ itérations).
+\begin{center}\includegraphics[width=0.9\linewidth]{../../sujets/sujet3/figures/s34b_departs.png}\end{center}
+\vspace{-0.9em}
+{\footnotesize
+\setlength{\tabcolsep}{2.6pt}
+\begin{tabularx}{\linewidth}{@{}>{\leavevmode\color{violet8}\bfseries}l *{12}{>{\centering\arraybackslash}X}@{}}
+\toprule
+$x_0$ & $-22$ & $-15$ & $-9$ & $-5$ & $-2$ & $0$ & $2$ & $5$ & $7{,}5$ & $12$ & $18$ & $24$ \\ \midrule
+Gradient & $-18{,}2$ & $-11{,}9$ & $-5{,}74$ & $-5{,}74$ & $\mathbf{-0{,}64}$ & $\mathbf{-0{,}64}$ & $2{,}81$ & $2{,}81$ & $8{,}81$ & $8{,}81$ & $15{,}0$ & $21{,}3$ \\
+Recuit & $\mathbf{-0{,}64}$ & $\mathbf{-0{,}68}$ & $\mathbf{-0{,}67}$ & $\mathbf{-0{,}66}$ & $2{,}88$ & $\mathbf{-0{,}72}$ & $\mathbf{-0{,}70}$ & $2{,}80$ & $\mathbf{-0{,}69}$ & $\mathbf{-0{,}70}$ & $2{,}79$ & $\mathbf{-0{,}71}$ \\
+\bottomrule
+\end{tabularx}}
+
+\vspace{0.2em}
+\lecture Le gradient atteint un minimum local \textbf{à chaque fois} (12 sur 12) : celui du bassin
+où il part. Il n'atteint le minimum global (en gras) que depuis $x_0 = -2$ et $0$, les seuls départs
+situés dans le bassin du global, qui ne couvre que 10,6~\% de l'intervalle. Le recuit l'atteint
+depuis 9 départs sur 12, même très loin ($-22$, $24$) ; les 3 autres lancers finissent dans le
+minimum local $2{,}80$, le plus proche en valeur du global (et depuis $-2$, c'est même l'inverse du
+gradient).
+
+\textbf{Conclusion.} Ce TD montre qu'atteindre \textbf{un} minimum local est simple : le gradient y
+arrive à coup sûr, de n'importe quel départ, avec une ligne de code. Atteindre \textbf{le} minimum
+global est bien plus dur : le gradient n'y arrive que si l'on part déjà dans le bon bassin, et le
+recuit, conçu pour cela, y parvient le plus souvent mais au prix de réglages, d'un coût plus élevé
+et sans certitude à chaque lancer. En pratique on combine les deux : recuit pour trouver le bon
 bassin, puis gradient depuis le meilleur point visité pour affiner.
 
 \newpage
