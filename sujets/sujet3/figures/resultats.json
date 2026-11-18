@@ -40,6 +40,34 @@
     ]
   },
   "q4": {
+    "gradient": {
+      "x_N": 8.660636731048562,
+      "h(x_N)": 56.248291648135236,
+      "|x_N - x*|": 9.297779475291279,
+      "h(x_N) - h(x*)": 57.37874453255533,
+      "meilleur h - h*": 57.37874453255533,
+      "entrée définitive dans le bassin du global": null,
+      "1er n avec h - h* < 0,05": null
+    },
+    "recuit": {
+      "x_N": -0.6503494195623869,
+      "h(x_N)": -1.1298308701847628,
+      "|x_N - x*|": 0.013206675319670347,
+      "h(x_N) - h(x*)": 0.0006220142353330349,
+      "meilleur h - h*": 4.9828748559965774e-05,
+      "entrée définitive dans le bassin du global": 617.0,
+      "1er n avec h - h* < 0,05": 250.0
+    },
+    "montees_acceptees": 266,
+    "taux_acceptation": 0.552,
+    "temps_gradient_ms": 0.6711360000082323,
+    "temps_recuit_ms": 5.101291499983063,
+    "bassin_global": [
+      -4.085985564091038,
+      1.226917451858804
+    ]
+  },
+  "reserve_1000_lancers": {
     "R": 1000,
     "succes_global": 0.738,
     "ic95_global": 0.027254291581327153,
@@ -52,8 +80,6 @@
     "variante_succes": 0.77,
     "variante_ic95": 0.04124158580850159,
     "acceptation_debut": 0.97604,
-    "acceptation_fin": 0.07322000000000001,
-    "duree_gradient_ms": 1.3320380001005105,
-    "duree_recuit_ms": 3.0388539998966735
+    "acceptation_fin": 0.07322000000000001
   }
 }

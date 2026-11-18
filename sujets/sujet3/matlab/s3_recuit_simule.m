@@ -21,13 +21,8 @@ if exist('OCTAVE_VERSION', 'builtin'), rand('twister', 2026); else, rng(2026); e
 xr = recuit(h, 7.5, N, 500, 0.99, a, b);
 fprintf('Q3 recuit : x_N = %.4f, h = %.4f\n', xr(end), h(xr(end)));
 
-% Q4 : 1000 recuits indépendants, proportion de succès
-R = 1000;  fins = zeros(1, R);
-for r = 1:R
-  x = recuit(h, 7.5, N, 500, 0.99, a, b);  fins(r) = x(end);
-end
-p = mean(abs(fins - xs) < 0.5);  et = sqrt(p*(1 - p)/R);
-fprintf('Q4 : succès %.3f +- %.3f (IC 95 %%)\n', p, 1.96*et);
+% Q4 : comparaison chiffrée, écart au minimum global h(x_N) - h(x*)
+fprintf('Q4 écart : gradient %.4f, recuit %.2e\n', h(xg(end)) - h(xs), h(xr(end)) - h(xs));
 
 % Figure : h, trajectoires du gradient et du recuit, sauvée en SVG
 figure('position', [100 100 1000 330]);

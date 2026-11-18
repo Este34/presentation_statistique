@@ -30,7 +30,10 @@
 | gradient, écarts $n = 10^3, 10^4, 10^5$ | 0,153 ; 0,051 ; 0,016 ; pente $-0{,}494$ (théorie $-0{,}505$) |
 | recuit, 1 lancer | $x_N = -0{,}650$, $h = -1{,}1298$ ; $T_N = 0{,}022$ ; $T = 1$ à $n = 618$ |
 | acceptation | 0,99 (100 premières it.) → 0,09 (100 dernières) |
-| recuit, 1000 lancers | global 73,8 % ± 2,7 % ; piège 25,9 % ± 2,7 % ; ailleurs 0,3 % |
+| Q4, écart final au global $h(x_N) - h(x^\star)$ | gradient 57,38 ; recuit $6{,}2\times10^{-4}$ |
+| Q4, recuit dans le bassin du global | dès $n = 250$, définitivement à $n = 617$ ; 266 montées acceptées |
+| Q4, Octave (autres tirages) | recuit $x_N = -0{,}698$, écart $1{,}3\times10^{-2}$ ; gradient identique |
+| *(réserve)* recuit, 1000 lancers | global 73,8 % ± 2,7 % ; piège 25,9 % ± 2,7 % ; ailleurs 0,3 % |
 | refroidissement lent ($\alpha = 0{,}995$, $N = 2000$) | 77,0 % ± 4,1 % (écart 1,27 e.-t., non significatif) |
 | profondeur max $d^\star$ | 26,2 à petits pas, $\approx 12{,}3$ avec sauts $\pm\pi/2$ (minimum en $-24{,}44$) |
 

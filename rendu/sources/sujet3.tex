@@ -83,8 +83,7 @@ $\alpha_n$ du gradient et le facteur de refroidissement $0{,}99$ du recuit. (4) 
 ne suffit pas à avoir $\sum\alpha_n = +\infty$ ($1/n^2$ est un $O(1/n)$) : il faut
 $\alpha_n \propto 1/n$. (5) $\alpha_0 = 0{,}025/0$ n'est pas défini : on numérote
 $x_n = x_{n-1} - \alpha_n h'(x_{n-1})$ pour $n \ge 1$ (de même, le pas $n$ du recuit utilise $T_n$).
-(6) Le recuit vise les \emph{minima} globaux, et la convergence est en probabilité, pas presque
-sûre (Q4).
+(6) Le recuit converge vers les \emph{minima} globaux, et non vers les « extrema » globaux.
 \end{tcolorbox}
 
 \question{Q2 · Gradient simple}
@@ -132,7 +131,9 @@ for n in range(1, N + 1):
 \end{lstlisting}
 \begin{center}\includegraphics[width=0.93\linewidth]{../../sujets/sujet3/figures/s33_recuit.png}\end{center}
 \vspace{-0.6em}
-\lecture Partant du même $x_0 = 7{,}5$, la trajectoire \textbf{sort du bassin local} : à haute
+\lecture \textbf{Le recuit atteint le minimum global.} Le zoom (au milieu) montre les dernières
+itérations regroupées au fond de la cuvette globale, et le point final (cercle noir) est sur
+l'étoile. Partant du même $x_0 = 7{,}5$ que le gradient, la trajectoire \textbf{sort du bassin local} : à haute
 température presque tout est accepté (taux de $0{,}99$ sur les 100 premières itérations) et la
 suite explore $[-3 ; 15{,}3]$. Quand $T_n$ passe sous 1 ($n \approx 618$), elle se fixe progressivement : dernière
 sortie du voisinage $\pm 0{,}5$ de $x^\star$ à $n = 702$, taux d'acceptation final $0{,}09$.
@@ -144,50 +145,50 @@ l'équilibre détaillé pour la loi de Boltzmann $\mu_T(x) \propto e^{-h(x)/T}$.
 $\mu_T(x)/\mu_T(x^\star) = e^{-(h(x) - h(x^\star))/T} \to 0$ quand $T \to 0$ : la loi
 stationnaire se concentre sur les minima globaux.
 
-\question{Q4 · Comparaison et commentaires}
-Un lancer du recuit est un résultat aléatoire : on le relance $R = 1000$ fois et on estime la
-proportion de succès $\hat p$ avec son erreur-type $\sqrt{\hat p(1-\hat p)/R}$.
-\begin{center}\includegraphics[width=0.93\linewidth]{../../sujets/sujet3/figures/s34_comparaison.png}\end{center}
-\vspace{-0.6em}
-\lecture Le gradient finit toujours en $8{,}66$ (0 succès). Le recuit atteint le minimum global
-dans \textbf{73,8~\%~±~2,7~\%} des lancers (IC à 95~\%) et reste piégé en $2{,}805$ dans
-\textbf{25,9~\%} des cas. L'affirmation de l'énoncé (« ce choix garantit la convergence presque
-sûre ») est \textbf{fausse} : avec $T_n = T_0\alpha^n$, $\sum_n e^{-d/T_n} < \infty$ pour toute
-hauteur de col $d > 0$ (moins de $10^{-30}$ au-delà de $n = 1000$ pour $d = 1{,}5$), donc la
-chaîne ne franchit presque sûrement plus qu'un nombre fini de cols (Borel-Cantelli) : elle
-\emph{gèle}, et ces 25,9~\% sont la proportion limite. La garantie théorique (Hajek, 1988, espace
-fini) est une convergence \emph{en probabilité}, avec $T_n = c/\ln n$ et $c$ au moins égal à la
-profondeur du minimum local non global le plus profond ($\approx 26$ pour de petits pas,
-$\approx 12$ avec des sauts de $\pm\pi/2$) : beaucoup trop lent en pratique. Intuition du 25~\% :
-les deux minima les plus bas ne diffèrent que de $1{,}06$ ; la chaîne gèle vers $T \approx 1$, où
-la loi de Boltzmann met $\approx 25$~\% de sa masse dans le bassin de $2{,}805$. Refroidir plus lentement ($\alpha = 0{,}995$, $N = 2000$, 400 lancers) donne
-77,0~\%~±~4,1~\%, écart de 1,27 erreur-type : \textbf{non significatif}.
-
-\vspace{0.3em}
+\question{Q4 · Comparaison quantitative}
+Même départ $x_0 = 7{,}5$, même budget de $N = 1000$ itérations : on compare la trajectoire du
+gradient (Q2) et celle du recuit (Q3). Le bassin du minimum global est l'intervalle entre les deux
+cols qui l'entourent, \mbox{$]-4{,}086 ; 1{,}227[$} (zone colorée à droite).
+\begin{center}\includegraphics[width=0.95\linewidth]{../../sujets/sujet3/figures/s34_comparaison.png}\end{center}
+\vspace{-0.4em}
 {\small
-\renewcommand{\arraystretch}{1.25}
-\begin{tabularx}{\linewidth}{@{}>{\bfseries\leavevmode\color{violet8}}p{2.9cm} X X@{}}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\linewidth}{@{}>{\leavevmode\color{violet8}\bfseries}X >{\raggedleft\arraybackslash}p{3.3cm} >{\raggedleft\arraybackslash}p{4.6cm}@{}}
 \toprule
  & \textbf{Gradient simple} & \textbf{Recuit simulé} \\ \midrule
-Garantie & Minimum \textbf{local}, celui du bassin de $x_0$ ; global garanti si $h$ convexe (ou si $x_0$ est dans le bassin du global) &
-Global en probabilité si $T_n = c/\ln n$ ($c$ assez grand) ; aucune avec $T_n = T_0\alpha^n$ (74~\% ici) \\
-Vitesse & $|e_n| \approx C n^{-0,5}$ ici ; géométrique avec un pas constant &
-Bon bassin atteint vers $n \approx 700$ ; précision finale grossière \\
-Coût & 1 évaluation de $h'$ par itération ; un seul lancer suffit (déterministe) &
-1 évaluation de $h$ et 2 tirages par itération ; plusieurs lancers pour juger le résultat \\
-Compréhension & Simple : on descend la pente &
-Plus subtile : chaîne de Markov, loi de Boltzmann, refroidissement \\
-Mise en œuvre & 1 paramètre (le pas), mais il faut $h'$ &
-3 réglages ($T_0$, $\alpha$, largeur de $g_n$), pas besoin de $h'$ \\
+Point final $x_N$ ; $h(x_N)$ & $8{,}661$ ; $56{,}25$ & $-0{,}650$ ; $-1{,}1298$ \\
+Écart au minimum global $h(x_N) - h(x^\star)$ & $57{,}38$ & $6{,}2\times10^{-4}$ \\
+Distance $|x_N - x^\star|$ & $9{,}30$ & $0{,}013$ \\
+Bassin du minimum global atteint & jamais & dès $n = 250$, définitivement à $n = 617$ \\
+Précision vers sa propre cible & $|x_N - \bar x| = 0{,}153$ & $|x_N - x^\star| = 0{,}013$ \\
+Montées acceptées & 0 & 266 (acceptation 55~\%) \\
+Évaluations de fonction & 1000 de $h'$ & $\le 1001$ de $h$, + 2000 tirages \\
+Temps de calcul (Python) & $\approx 1$ ms & quelques ms (4 à 7 fois plus) \\
 \bottomrule
 \end{tabularx}}
 
-\vspace{0.4em}
-\textbf{Conclusion.} Le gradient est simple, peu coûteux et reproductible, mais lent ici et prisonnier du bassin de
-$x_0$. Le recuit échappe aux minima locaux au prix de réglages délicats et d'un résultat
-aléatoire. En pratique on les combine : recuit pour explorer, puis gradient depuis le meilleur
-point visité pour affiner, ou plusieurs recuits indépendants (avec 2 lancers, l'échec tombe à
-$0{,}262^2 \approx 7$~\%).
+\vspace{0.3em}
+\lecture
+\begin{itemize}
+\item \textbf{Garantie et résultat.} Le gradient converge vers le minimum \textbf{local} du bassin de
+$x_0$ (global seulement si $h$ est convexe ou si $x_0$ est dans le bon bassin) : il finit à
+$57{,}4$ au-dessus du minimum global. Le recuit sort de ce bassin grâce aux 266 montées acceptées
+et finit à $6 \times 10^{-4}$ du minimum global, soit un écart environ $10^5$ fois plus petit.
+\item \textbf{Vitesse.} Le gradient avance régulièrement mais lentement ($|e_n| \approx C n^{-0,5}$,
+encore $0{,}153$ de sa cible à $n = 1000$). Le recuit progresse par à-coups (à gauche, échelle
+log) : il touche le bon bassin à $n = 250$ et s'y fixe à $n = 617$, quand $T_n$ passe sous 1.
+\item \textbf{Coût.} Une évaluation de fonction par itération dans les deux cas ; le recuit ajoute
+deux tirages et un test, d'où un temps plus long, qui reste de quelques millisecondes.
+\item \textbf{Compréhension et mise en œuvre.} Le gradient tient en une ligne et un réglage (le pas),
+mais il faut connaître $h'$. Le recuit n'utilise que $h$, mais demande trois réglages ($T_0$,
+$\alpha$, largeur de $g_n$), son analyse passe par les chaînes de Markov, et comme il est aléatoire
+une autre graine donne une autre trajectoire.
+\end{itemize}
+
+\textbf{Conclusion.} Le gradient est simple, rapide par itération et reproductible, mais prisonnier
+du bassin de $x_0$. Le recuit atteint le minimum global là où le gradient échoue, au prix de
+réglages et d'un coût un peu plus élevé. En pratique on les combine : recuit pour trouver le bon
+bassin, puis gradient depuis le meilleur point visité pour affiner.
 
 \newpage
 \question{Annexe · Le même TD en Matlab et en Python}
@@ -270,7 +271,7 @@ trace deux fois sur le même \texttt{ax}).}
 Q1 grille : h(-0.6385) = -1.1304 ; x* = -0.6371
 Q2 gradient : x_N = 8.6606, h = 56.2483
 Q3 recuit : x_N = -0.6978, h = -1.1172
-Q4 : succès 0.736 +- 0.027 (IC 95 %)
+Q4 écart : gradient 57.3787, recuit 1.33e-02
 \end{lstlisting}
 \end{minipage}\hfill
 \begin{minipage}[t]{0.495\linewidth}
@@ -279,18 +280,18 @@ Q4 : succès 0.736 +- 0.027 (IC 95 %)
 Q1 grille : h(-0.6385) = -1.1304 ; x* = -0.6371
 Q2 gradient : x_N = 8.6606, h = 56.2483
 Q3 recuit : x_N = -0.6503, h = -1.1298
-Q4 : succès 0.738 +- 0.027 (IC 95 %)
+Q4 écart : gradient 57.3787, recuit 6.22e-04
 \end{lstlisting}
 \end{minipage}
 
 \vspace{0.2em}
 \lecture Les parties \textbf{déterministes} donnent exactement les mêmes chiffres : minimum de la
-grille $h(-0{,}6385) = -1{,}1304$ et gradient $x_N = 8{,}6606$ ($h = 56{,}2483$) dans les deux
-langages. Pour le recuit, les deux logiciels n'utilisent pas le même générateur aléatoire : les
-tirages diffèrent, donc le lancer unique aussi (Octave finit en $-0{,}698$, Python en $-0{,}650$,
-tous deux dans le bassin du minimum global). Mais la \textbf{statistique} concorde : 73,6~\% contre
-73,8~\% de succès sur 1000 lancers, un écart de 0,10 erreur-type, sans aucune signification. On
-retrouve le même comportement quel que soit le langage : c'est l'algorithme qui compte.
+grille $h = -1{,}1304$ en $x = -0{,}6385$, et gradient $x_N = 8{,}6606$ ($h = 56{,}2483$, écart au global
+$57{,}3787$) dans les deux langages. Pour le recuit, les deux logiciels n'utilisent pas le même
+générateur aléatoire : les tirages diffèrent, donc la trajectoire aussi. Mais dans les deux cas le
+recuit \textbf{atteint le minimum global} : Octave finit en $-0{,}698$ (écart $1{,}3 \times 10^{-2}$),
+Python en $-0{,}650$ (écart $6{,}2 \times 10^{-4}$), contre $57{,}4$ pour le gradient. Même
+conclusion quel que soit le langage : c'est l'algorithme qui compte.
 
 \vspace{-0.6em}
 \begin{center}\includegraphics[width=\linewidth,height=4.9cm,keepaspectratio]{../../sujets/sujet3/figures/s35_octave.png}\\[-0.2em]

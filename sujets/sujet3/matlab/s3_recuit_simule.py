@@ -38,8 +38,5 @@ rng = np.random.default_rng(2026)
 xr = recuit(7.5, N, 500, 0.99, rng)
 print(f"Q3 recuit : x_N = {xr[-1]:.4f}, h = {h(xr[-1]):.4f}")
 
-# Q4 : 1000 recuits indépendants, proportion de succès
-R = 1000
-fins = np.array([recuit(7.5, N, 500, 0.99, rng)[-1] for _ in range(R)])
-p = np.mean(np.abs(fins - xs) < 0.5); et = np.sqrt(p * (1 - p) / R)
-print(f"Q4 : succès {p:.3f} +- {1.96 * et:.3f} (IC 95 %)")
+# Q4 : comparaison chiffrée, écart au minimum global h(x_N) - h(x*)
+print(f"Q4 écart : gradient {h(xg[-1]) - h(xs):.4f}, recuit {h(xr[-1]) - h(xs):.2e}")
