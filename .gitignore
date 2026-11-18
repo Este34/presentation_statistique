@@ -2,3 +2,7 @@ __pycache__/
 *.pyc
 .pytest_cache/
 .ipynb_checkpoints/
+rendu/sources/*.aux
+rendu/sources/*.log
+rendu/sources/*.out
+rendu/sources/*.pdf

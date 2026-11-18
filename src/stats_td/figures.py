@@ -6,6 +6,10 @@ import matplotlib.pyplot as plt
 
 BLEU = "#2a6fdb"
 ORANGE = "#e8743b"
+# Charte Université Paris 8 (rendus PDF)
+VIOLET = "#842577"
+ROUGE = "#e10717"
+GRIS = "#6b6b6b"
 
 
 def style():
