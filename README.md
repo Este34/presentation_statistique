@@ -1,4 +1,4 @@
-# TD de statistique — Génération de variables aléatoires
+# TD de statistique
 
 **Les rendus : [`rendu/TD_stats_sujet1_EBP.pdf`](rendu/TD_stats_sujet1_EBP.pdf) (sujet 1) · [`rendu/TD_stats_sujet3_EBP.pdf`](rendu/TD_stats_sujet3_EBP.pdf) (sujet 3)**
 
