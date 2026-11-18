@@ -51,175 +51,93 @@
 \begin{tabularx}{\linewidth}{@{}>{\color{gris8}}l X >{\color{gris8}}l X@{}}
 Auteur & Esteban BERETTI--PRENANT & Enseignant & M. Zerzeri\\
 Formation & Master Informatique I2A, Université Paris 8 & Date & 18/11/2026\\
-Outils & Python (numpy, scipy, matplotlib), graine 2026 & Notebook & \texttt{s3\_1\_recuit\_simule.ipynb}\\
+Outils & Python, graine 2026 & Notebook & \texttt{s3\_1\_recuit\_simule.ipynb}\\
 Dépôt & \multicolumn{3}{l}{\href{https://github.com/Este34/presentation_statistique}{\color{violet8}github.com/Este34/presentation\_statistique} (code, tests, démonstrations complètes)}\\
 \end{tabularx}}
 
 \vspace{0.2em}
-\textbf{Problème.} Minimiser $h(x) = x^2 + 3x\cos x$ sur $[-8\pi, 8\pi]$ en partant de
-$x_0 = 7{,}5$, point situé dans le bassin d'attraction d'un minimum \emph{local} non global.
-On compare le gradient simple, qui suit la pente, et le recuit simulé, qui accepte parfois de
-remonter. (Maximiser $h$ reviendrait à minimiser $\tilde h = -h$.)
+\textbf{Problème.} Minimiser $h(x) = x^2 + 3x\cos x$ sur $[-8\pi, 8\pi]$ depuis $x_0 = 7{,}5$, avec
+le gradient simple puis le recuit simulé.
 
-\question{Q1 · La fonction $h$ et ses extrema}
-$h'(x) = 2x + 3\cos x - 3x\sin x$ et $h''(x) = 2 - 6\sin x - 3x\cos x$. Le terme $3x\cos x$
-oscille avec une amplitude $3|x|$ croissante, et $h''$ change de signe ($h''(0) = 2 > 0$,
-$h''(2\pi) = 2 - 6\pi < 0$) : $h$ \textbf{n'est pas convexe}. De plus $h(x) \ge x^2 - 3|x| = |x|(|x| - 3) > 0$ pour $|x| > 3$, alors que $h$ prend
-des valeurs négatives : le minimum global est forcément dans $]-3, 3[$.
-
+\question{Q1 · La fonction $h$}
+\begin{lstlisting}
+y = np.linspace(-8 * np.pi, 8 * np.pi, 5000)   # grille de 5000 points
+h_n = y**2 + 3 * y * np.cos(y)
+i = np.argmin(h_n)                               # Matlab : [m, i] = min(h_n)
+\end{lstlisting}
 \begin{center}\includegraphics[width=0.86\linewidth]{../../sujets/sujet3/figures/s31_h.png}\end{center}
 \vspace{-0.6em}
-\lecture Sur 5000 points, \texttt{min} donne $h(-0{,}6385) = -1{,}1304$ ; en affinant le zéro
-de $h'$ : minimum global $x^\star = -0{,}6371$, $h(x^\star) = -1{,}1305$. On compte
-\textbf{9 minima locaux}. Le plus traître est $x = 2{,}805$ ($h = -0{,}075$), presque aussi bas que
-le global. $x_0 = 7{,}5$ est entre les maxima $7{,}14$ et $13{,}37$ : dans le bassin du minimum
-local $8{,}814$ ($h = 56{,}03$).
+\lecture 9 minima locaux. Minimum global $x^\star = -0{,}637$ ($h = -1{,}130$). Le départ
+$x_0 = 7{,}5$ est dans la cuvette du minimum local $\bar x = 8{,}814$ ($h = 56{,}03$).
 
 \begin{tcolorbox}[coquille]
-\textbf{Coquilles de l'énoncé.} (1) « $h = -h$ » : lire $\tilde h = -h$. (2) Avec
-$y_n = -8\pi + 16\pi\,\frac{n-1}{5000}$, le dernier point vaut $25{,}1227 < 8\pi = 25{,}1327$ :
-diviser par 4999, comme \texttt{linspace}. (3) La lettre $\alpha$ désigne à la fois le pas
-$\alpha_n$ du gradient et le facteur de refroidissement $0{,}99$ du recuit. (4) « $\alpha_n = O(1/n)$ »
-ne suffit pas à avoir $\sum\alpha_n = +\infty$ ($1/n^2$ est un $O(1/n)$) : il faut
-$\alpha_n \propto 1/n$. (5) $\alpha_0 = 0{,}025/0$ n'est pas défini : on numérote
-$x_n = x_{n-1} - \alpha_n h'(x_{n-1})$ pour $n \ge 1$ (de même, le pas $n$ du recuit utilise $T_n$).
-(6) Le recuit converge vers les \emph{minima} globaux, et non vers les « extrema » globaux.
+\textbf{Coquilles de l'énoncé.} « $h = -h$ » : lire $\tilde h = -h$. Avec $\frac{n-1}{5000}$, la grille
+s'arrête à $25{,}12 < 8\pi$ : diviser par 4999. $\alpha_0 = 0{,}025/0$ n'est pas défini (on part de
+$n = 1$), et $\alpha$ désigne aussi le facteur $0{,}99$ du recuit.
 \end{tcolorbox}
 
 \question{Q2 · Gradient simple}
-$x_n = x_{n-1} - \alpha_n h'(x_{n-1})$, $\alpha_n = 0{,}025/n$ : $\sum\alpha_n = +\infty$ (on peut
-aller aussi loin que nécessaire) et $\sum\alpha_n^2 < \infty$ (les pas s'éteignent). Par Taylor,
-$h(x - \alpha_n h'(x)) \le h(x) - \alpha_n h'(x)^2\,(1 - \alpha_n M/2)$ avec $M \ge h''$ sur le
-segment parcouru ; ici $M \approx 20{,}2$ et $\alpha_n \le 0{,}025$, donc $\alpha_n M/2 < 1$ : $h$
-baisse strictement à chaque pas.
 \noindent\begin{minipage}{\linewidth}
 \begin{lstlisting}
-def gradient_simple(grad, x0, N, pas=lambda n: 0.025 / n):
-    x = np.empty(N + 1); x[0] = x0
-    for n in range(1, N + 1):
-        x[n] = x[n - 1] - pas(n) * grad(x[n - 1])   # x_n = x_{n-1} - α_n h'(x_{n-1})
-    return x
+x = np.empty(N + 1); x[0] = 7.5
+for n in range(1, N + 1):
+    x[n] = x[n - 1] - 0.025 / n * dh(x[n - 1])   # x_n = x_{n-1} - α_n h'(x_{n-1})
 \end{lstlisting}
 \end{minipage}
 \begin{center}\includegraphics[width=0.93\linewidth]{../../sujets/sujet3/figures/s32_gradient.png}\end{center}
 \vspace{-0.6em}
-\lecture $h'(7{,}5) = -5{,}07 < 0$ : la suite part vers la droite, $h$ décroît à chaque pas, et
-après 1000 itérations $x_N = 8{,}661$ ($h = 56{,}25$). Le gradient \textbf{converge vers le
-minimum local} $8{,}814$, jamais vers le global : il ne peut pas remonter le col en $7{,}14$.
-La convergence est \textbf{lente}. Notons $\bar x = 8{,}814$ ce minimum local et
-$e_n = x_n - \bar x$ l'erreur. Comme $h'(x) \approx h''(\bar x)(x - \bar x)$,
-$e_{n+1} \approx (1 - c/n)\,e_n$ avec $c = 0{,}025\,h''(\bar x) = 0{,}505$, d'où
-$|e_n| \approx C n^{-c}$ ($C$ constante). On mesure
-$|e_n| = 0{,}153$ ; $0{,}051$ ; $0{,}016$ pour $n = 10^3, 10^4, 10^5$, soit une pente log-log de
-$-0{,}494$ pour $-0{,}505$ prévu : l'erreur décroît en $1/\sqrt n$.
+\lecture La suite descend vers le minimum \textbf{local} $8{,}814$ ($x_N = 8{,}661$) et ne remonte
+jamais le col en $7{,}14$. Convergence lente : écart en $n^{-0,5}$ ($0{,}153$ à $n = 1000$).
 
 \question{Q3 · Recuit simulé}
-On propose $z \sim \mathcal U[x_n - \frac\pi2, x_n + \frac\pi2]$ et on l'accepte avec la
-probabilité $\min(1, e^{-\Delta h_n / T_n})$, $\Delta h_n = h(z) - h(x_n)$, avec
-$T_n = 500 \times 0{,}99^n$. En pratique on tire $U \sim \mathcal U[0,1]$ et on accepte si
-$U < e^{-\Delta h_n/T_n}$, puisque $P(U < p) = p$. Choix d'implémentation : un $z$ hors de
-$[-8\pi, 8\pi]$ est refusé.
 \begin{lstlisting}
 for n in range(1, N + 1):
-    T = T0 * alpha**n                                   # température T_n
-    z = x[n - 1] + rng.uniform(-np.pi / 2, np.pi / 2)  # loi instrumentale g_n
+    T = 500 * 0.99**n                                   # température T_n
+    z = x[n - 1] + rng.uniform(-np.pi / 2, np.pi / 2)  # loi g_n
     u = rng.random()
     if a <= z <= b and (h(z) <= h(x[n-1]) or u < np.exp(-(h(z) - h(x[n-1])) / T)):
         x[n] = z                                        # z accepté
     else:
         x[n] = x[n - 1]                                 # z refusé
 \end{lstlisting}
-\begin{center}\includegraphics[width=0.93\linewidth]{../../sujets/sujet3/figures/s33_recuit.png}\end{center}
+\begin{center}\includegraphics[width=0.97\linewidth]{../../sujets/sujet3/figures/s33_recuit.png}\end{center}
 \vspace{-0.6em}
-\lecture \textbf{Le recuit atteint le minimum global.} Le zoom (au milieu) montre les dernières
-itérations regroupées au fond de la cuvette globale, et le point final (cercle noir) est sur
-l'étoile. Partant du même $x_0 = 7{,}5$ que le gradient, la trajectoire \textbf{sort du bassin local} : à haute
-température presque tout est accepté (taux de $0{,}99$ sur les 100 premières itérations) et la
-suite explore $[-3 ; 15{,}3]$. Quand $T_n$ passe sous 1 ($n \approx 618$), elle se fixe progressivement : dernière
-sortie du voisinage $\pm 0{,}5$ de $x^\star$ à $n = 702$, taux d'acceptation final $0{,}09$.
-Résultat : $x_N = -0{,}650$, $h(x_N) = -1{,}1298$ contre $-1{,}1305$ : le \textbf{minimum
-global} est trouvé, avec une précision limitée par la largeur fixe ($\pm\pi/2$) des propositions.
-
-\emph{Pourquoi le global ?} À $T$ fixé, la proposition est symétrique et la chaîne vérifie
-l'équilibre détaillé pour la loi de Boltzmann $\mu_T(x) \propto e^{-h(x)/T}$. Or
-$\mu_T(x)/\mu_T(x^\star) = e^{-(h(x) - h(x^\star))/T} \to 0$ quand $T \to 0$ : la loi
-stationnaire se concentre sur les minima globaux.
+\lecture Tant que $T_n$ est grand, les montées sont acceptées : la suite quitte la cuvette de
+départ. En refroidissant, elle se fixe au \textbf{minimum global} : $x_N = -0{,}650$ et
+$h(x_N) = -1{,}1298$, contre $h(x^\star) = -1{,}1305$.
 
 \question{Q4 · Comparaison quantitative}
-Même départ $x_0 = 7{,}5$, même budget de $N = 1000$ itérations : on compare la trajectoire du
-gradient (Q2) et celle du recuit (Q3). Le bassin du minimum global est l'intervalle entre les deux
-cols qui l'entourent, \mbox{$]-4{,}086 ; 1{,}227[$} (zone colorée à droite).
-\begin{center}\includegraphics[width=0.88\linewidth]{../../sujets/sujet3/figures/s34_comparaison.png}\end{center}
+\begin{center}\includegraphics[width=0.9\linewidth]{../../sujets/sujet3/figures/s34_comparaison.png}\end{center}
 \vspace{-0.4em}
 {\small
-\renewcommand{\arraystretch}{1.2}
-\begin{tabularx}{\linewidth}{@{}>{\leavevmode\color{violet8}\bfseries}X >{\raggedleft\arraybackslash}p{3.3cm} >{\raggedleft\arraybackslash}p{4.6cm}@{}}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\linewidth}{@{}>{\leavevmode\color{violet8}\bfseries}X >{\raggedleft\arraybackslash}p{3.1cm} >{\raggedleft\arraybackslash}p{4.4cm}@{}}
 \toprule
- & \textbf{Gradient simple} & \textbf{Recuit simulé} \\ \midrule
+Départ $x_0 = 7{,}5$, $N = 1000$ & \textbf{Gradient} & \textbf{Recuit} \\ \midrule
 Point final $x_N$ ; $h(x_N)$ & $8{,}661$ ; $56{,}25$ & $-0{,}650$ ; $-1{,}1298$ \\
 Écart au minimum global $h(x_N) - h(x^\star)$ & $57{,}38$ & $6{,}2\times10^{-4}$ \\
-Distance $|x_N - x^\star|$ & $9{,}30$ & $0{,}013$ \\
 Bassin du minimum global atteint & jamais & dès $n = 250$, définitivement à $n = 617$ \\
-Précision vers sa propre cible & $|x_N - \bar x| = 0{,}153$ & $|x_N - x^\star| = 0{,}013$ \\
-Montées acceptées & 0 & 266 (acceptation 55~\%) \\
-Évaluations de fonction & 1000 de $h'$ & $\le 1001$ de $h$, + 2000 tirages \\
-Temps de calcul (Python) & $\approx 1$ ms & quelques ms (4 à 7 fois plus) \\
+Montées acceptées & 0 & 266 \\
+Évaluations ; temps de calcul & 1000 de $h'$ ; $\approx 1$ ms & 1000 de $h$ ; quelques ms \\
+Réglages & 1 (le pas), il faut $h'$ & 3 ($T_0$, $\alpha$, largeur), pas de $h'$ \\
 \bottomrule
 \end{tabularx}}
 
 \vspace{0.3em}
-\lecture
-\begin{itemize}
-\item \textbf{Garantie et résultat.} Le gradient converge vers le minimum \textbf{local} du bassin de
-$x_0$ (global seulement si $h$ est convexe ou si $x_0$ est dans le bon bassin) : il finit à
-$57{,}4$ au-dessus du minimum global. Le recuit sort de ce bassin grâce aux 266 montées acceptées
-et finit à $6 \times 10^{-4}$ du minimum global, soit un écart environ $10^5$ fois plus petit.
-\item \textbf{Vitesse.} Le gradient avance régulièrement mais lentement ($|e_n| \approx C n^{-0,5}$,
-encore $0{,}153$ de sa cible à $n = 1000$). Le recuit progresse par à-coups (à gauche, échelle
-log) : il touche le bon bassin à $n = 250$ et s'y fixe à $n = 617$, quand $T_n$ passe sous 1.
-\item \textbf{Coût.} Une évaluation de fonction par itération dans les deux cas ; le recuit ajoute
-deux tirages et un test, d'où un temps plus long, qui reste de quelques millisecondes.
-\item \textbf{Compréhension et mise en œuvre.} Le gradient tient en une ligne et un réglage (le pas),
-mais il faut connaître $h'$. Le recuit n'utilise que $h$, mais demande trois réglages ($T_0$,
-$\alpha$, largeur de $g_n$), son analyse passe par les chaînes de Markov, et comme il est aléatoire
-une autre graine donne une autre trajectoire.
-\end{itemize}
-
-\textbf{Plusieurs points de départ.} Même expérience depuis 12 départs répartis sur l'intervalle
-(1000 itérations chacun ; minimum visé par le gradient identifié en prolongeant à $10^5$ itérations).
+\textbf{Plusieurs points de départ} (12 départs, 1000 itérations chacun) :
 \begin{center}\includegraphics[width=0.9\linewidth]{../../sujets/sujet3/figures/s34b_departs.png}\end{center}
-\vspace{-0.9em}
-{\footnotesize
-\setlength{\tabcolsep}{2.6pt}
-\begin{tabularx}{\linewidth}{@{}>{\leavevmode\color{violet8}\bfseries}l *{12}{>{\centering\arraybackslash}X}@{}}
-\toprule
-$x_0$ & $-22$ & $-15$ & $-9$ & $-5$ & $-2$ & $0$ & $2$ & $5$ & $7{,}5$ & $12$ & $18$ & $24$ \\ \midrule
-Gradient & $-18{,}2$ & $-11{,}9$ & $-5{,}74$ & $-5{,}74$ & $\mathbf{-0{,}64}$ & $\mathbf{-0{,}64}$ & $2{,}81$ & $2{,}81$ & $8{,}81$ & $8{,}81$ & $15{,}0$ & $21{,}3$ \\
-Recuit & $\mathbf{-0{,}64}$ & $\mathbf{-0{,}68}$ & $\mathbf{-0{,}67}$ & $\mathbf{-0{,}66}$ & $2{,}88$ & $\mathbf{-0{,}72}$ & $\mathbf{-0{,}70}$ & $2{,}80$ & $\mathbf{-0{,}69}$ & $\mathbf{-0{,}70}$ & $2{,}79$ & $\mathbf{-0{,}71}$ \\
-\bottomrule
-\end{tabularx}}
+\vspace{-0.6em}
+\lecture Le gradient atteint un minimum local à chaque fois (12/12), mais le global seulement
+depuis $-2$ et $0$, dans la cuvette du global. Le recuit atteint le global depuis 9 départs sur 12.
 
-\vspace{0.2em}
-\lecture Le gradient atteint un minimum local \textbf{à chaque fois} (12 sur 12) : celui du bassin
-où il part. Il n'atteint le minimum global (en gras) que depuis $x_0 = -2$ et $0$, les seuls départs
-situés dans le bassin du global, qui ne couvre que 10,6~\% de l'intervalle. Le recuit l'atteint
-depuis 9 départs sur 12, même très loin ($-22$, $24$) ; les 3 autres lancers finissent dans le
-minimum local $2{,}80$, le plus proche en valeur du global (et depuis $-2$, c'est même l'inverse du
-gradient).
-
-\textbf{Conclusion.} Ce TD montre qu'atteindre \textbf{un} minimum local est simple : le gradient y
-arrive à coup sûr, de n'importe quel départ, avec une ligne de code. Atteindre \textbf{le} minimum
-global est bien plus dur : le gradient n'y arrive que si l'on part déjà dans le bon bassin, et le
-recuit, conçu pour cela, y parvient le plus souvent mais au prix de réglages, d'un coût plus élevé
-et sans certitude à chaque lancer. En pratique on combine les deux : recuit pour trouver le bon
-bassin, puis gradient depuis le meilleur point visité pour affiner.
+\textbf{Conclusion.} Atteindre \textbf{un} minimum local est simple ; atteindre \textbf{le}
+minimum global est bien plus dur. Le gradient y arrive seulement s'il part dans la bonne cuvette ;
+le recuit y arrive le plus souvent, au prix de réglages et sans certitude à chaque lancer.
 
 \newpage
 \question{Annexe · Le même TD en Matlab et en Python}
-Les fonctions citées par l'énoncé (\texttt{for}, \texttt{rand}, \texttt{min}, \texttt{if},
-\texttt{plot}, \texttt{hold on}) sont des fonctions Matlab : voici le cœur du TD écrit dans les deux
-langages, ligne à ligne. Le script Matlab a été \textbf{exécuté} avec GNU Octave 8.4 (logiciel libre
-compatible Matlab). Scripts complets dans le dossier \texttt{sujets/sujet3/matlab/} du dépôt.
+Le même code en Matlab (exécuté sous GNU Octave 8.4) et en Python
+(scripts dans \texttt{sujets/sujet3/matlab/}).
 
 \lstdefinestyle{petit}{basicstyle=\ttfamily\footnotesize}
 \noindent
@@ -282,12 +200,6 @@ def recuit(x0, N, T0, alpha, rng):
 \end{minipage}
 
 \vspace{0.3em}
-{\small Pièges de traduction : indices à partir de 1 en Matlab (\texttt{xg(1)} $=$ \texttt{xg[0]}) ;
-opérations pointées \texttt{.\^{}} et \texttt{.*} en Matlab ; \texttt{[m, i] = min(...)} donne
-aussi la position (\texttt{np.argmin} en Python) ; \texttt{hold on} n'existe pas en matplotlib (on
-trace deux fois sur le même \texttt{ax}).}
-
-\vspace{0.3em}
 \noindent
 \begin{minipage}[t]{0.495\linewidth}
 {\small\bfseries\color{violet8}Sortie Octave} {\small\color{gris8}(Mersenne Twister, graine 2026)}
@@ -309,13 +221,9 @@ Q4 écart : gradient 57.3787, recuit 6.22e-04
 \end{minipage}
 
 \vspace{0.2em}
-\lecture Les parties \textbf{déterministes} donnent exactement les mêmes chiffres : minimum de la
-grille $h = -1{,}1304$ en $x = -0{,}6385$, et gradient $x_N = 8{,}6606$ ($h = 56{,}2483$, écart au global
-$57{,}3787$) dans les deux langages. Pour le recuit, les deux logiciels n'utilisent pas le même
-générateur aléatoire : les tirages diffèrent, donc la trajectoire aussi. Mais dans les deux cas le
-recuit \textbf{atteint le minimum global} : Octave finit en $-0{,}698$ (écart $1{,}3 \times 10^{-2}$),
-Python en $-0{,}650$ (écart $6{,}2 \times 10^{-4}$), contre $57{,}4$ pour le gradient. Même
-conclusion quel que soit le langage : c'est l'algorithme qui compte.
+\lecture Gradient : mêmes chiffres dans les deux langages (déterministe). Recuit : générateurs
+aléatoires différents, donc trajectoires différentes, mais le minimum global est atteint dans les
+deux cas.
 
 \vspace{-0.6em}
 \begin{center}\includegraphics[width=\linewidth,height=4.9cm,keepaspectratio]{../../sujets/sujet3/figures/s35_octave.png}\\[-0.2em]
