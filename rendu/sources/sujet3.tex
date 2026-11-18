@@ -7,7 +7,7 @@
 \usepackage{polyglossia}\setmainlanguage{french}
 \usepackage{amsmath,amssymb,icomma}
 \usepackage{graphicx,xcolor,booktabs,tabularx,array,listings,fancyhdr,enumitem,tcolorbox}
-\usepackage{lastpage}
+\usepackage{lastpage,needspace}
 \usepackage[hidelinks]{hyperref}
 
 \definecolor{violet8}{HTML}{842577}
@@ -24,9 +24,12 @@
 \fancyhead[L]{\includegraphics[height=0.55cm]{paris8.png}}
 \fancyhead[R]{\small\color{gris8}Statistiques et Analyse de Données · TP3}
 \fancyfoot[C]{\small\color{gris8}\thepage\,/\,\pageref{LastPage}}
+\fancypagestyle{premiere}{\fancyhf{}\renewcommand{\headrulewidth}{0pt}%
+  \fancyfoot[C]{\small\color{gris8}\thepage\,/\,\pageref{LastPage}}}
+\newcommand{\etiquette}[1]{\leavevmode{\scriptsize\addfontfeatures{LetterSpace=8}\color{gris8}\MakeUppercase{#1}}}
 
 \newcommand{\barre}{{\color{violet8}\rule{0.55\linewidth}{0.6pt}}{\color{rouge8}\rule{0.45\linewidth}{0.6pt}}}
-\newcommand{\question}[1]{\vspace{0.5em}{\large\bfseries\color{violet8}#1}\par\vspace{0.25em}}
+\newcommand{\question}[1]{\needspace{10\baselineskip}\vspace{0.5em}{\large\bfseries\color{violet8}#1}\par\vspace{0.25em}}
 \newcommand{\lecture}{{\bfseries\color{rouge8}Lecture.}\ }
 
 \lstset{basicstyle=\ttfamily,keywordstyle=\color{violet8}\bfseries,commentstyle=\color{gris8},
@@ -43,21 +46,36 @@
 \begin{document}
 
 % ---------- En-tête de la première page ----------
-{\footnotesize\bfseries\color{rouge8}STATISTIQUES ET ANALYSE DE DONNÉES · RENDU}\par\vspace{0.2em}
-{\LARGE\bfseries TP3 : Un algorithme d'optimisation stochastique, le recuit simulé}\par\vspace{0.2em}
-{\color{violet8}Gradient simple (déterministe) contre recuit simulé (stochastique)}\par\vspace{0.3em}
-\barre\par\vspace{0.1em}
-{\small
-\begin{tabularx}{\linewidth}{@{}>{\color{gris8}}l X >{\color{gris8}}l X@{}}
-Auteur & Esteban BERETTI--PRENANT & Enseignant & M. Zerzeri\\
-Formation & Master Informatique I2A, Université Paris 8 & Date & 18/11/2026\\
-Outils & Python, graine 2026 & Notebook & \texttt{s3\_1\_recuit\_simule.ipynb}\\
-Dépôt & \multicolumn{3}{l}{\href{https://github.com/Este34/presentation_statistique}{\color{violet8}github.com/Este34/presentation\_statistique} (code, tests, démonstrations complètes)}\\
-\end{tabularx}}
+\thispagestyle{premiere}
+\vspace*{-1.2cm}
+\noindent\begin{minipage}[c]{0.5\linewidth}\includegraphics[height=1.55cm]{paris8.png}\end{minipage}%
+\begin{minipage}[c]{0.5\linewidth}\raggedleft\small\color{gris8}
+Master Informatique I2A\\Année 2026-2027\end{minipage}
 
-\vspace{0.2em}
-\textbf{Problème.} Minimiser $h(x) = x^2 + 3x\cos x$ sur $[-8\pi, 8\pi]$ depuis $x_0 = 7{,}5$, avec
-le gradient simple puis le recuit simulé.
+\vspace{1.1cm}
+{\footnotesize\bfseries\addfontfeatures{LetterSpace=14}\color{rouge8}STATISTIQUES ET ANALYSE DE DONNÉES · RENDU}\par
+\vspace{0.55em}
+{\fontsize{24}{29}\selectfont\bfseries TP3 : Un algorithme d'optimisation\\[0.1em] stochastique, le recuit simulé\par}
+\vspace{0.6em}
+{\large\color{violet8}Gradient simple (déterministe) contre recuit simulé (stochastique)\par}
+\vspace{0.9em}
+{\color{violet8}\rule{0.32\linewidth}{2pt}}{\color{rouge8}\rule{0.18\linewidth}{2pt}}\par
+\vspace{1.1em}
+
+\begin{tcolorbox}[colback=fond,colframe=fond,arc=3pt,boxrule=0pt,left=10pt,right=10pt,top=8pt,bottom=8pt]
+\renewcommand{\arraystretch}{1.6}
+\begin{tabularx}{\linewidth}{@{}p{2.2cm} >{\raggedright\arraybackslash}X p{2.2cm} >{\raggedright\arraybackslash}p{3.2cm}@{}}
+\etiquette{Auteur} & \textbf{Esteban BERETTI--PRENANT} & \etiquette{Enseignant} & M. Zerzeri \\
+\etiquette{Formation} & Master Informatique I2A, Université Paris 8 & \etiquette{Date} & 18/11/2026 \\
+\etiquette{Outils} & Python (numpy, matplotlib), Octave & \etiquette{Graine} & 2026 \\
+\etiquette{Dépôt} & \multicolumn{3}{l}{\href{https://github.com/Este34/presentation_statistique}{\color{violet8}github.com/Este34/presentation\_statistique}\ \ {\color{gris8}\small(code, tests, notebooks)}} \\
+\end{tabularx}
+\end{tcolorbox}
+
+\vspace{0.6em}
+{\color{violet8}\bfseries Problème.} Minimiser $h(x) = x^2 + 3x\cos x$ sur $[-8\pi, 8\pi]$ depuis
+$x_0 = 7{,}5$, avec le gradient simple puis le recuit simulé.
+\vspace{0.4em}
 
 \question{Q1 · La fonction $h$}
 \begin{lstlisting}
