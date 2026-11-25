@@ -4,6 +4,16 @@ Journal des séances de préparation (la plus récente en haut).
 
 ---
 
+## 2026-11-25 · Sujet 4 · convolution, puis rendu réduit à la partie A
+
+- Convolution (B.1), densité de $U_1 + U_2$ en $0{,}5$ : 🟡 au premier essai (« 50 % » : bonne valeur,
+  sans justification, confusion densité / probabilité), ❌ à la relance (1,5). Réponse modèle donnée
+  avec une figure (intervalle commun $[0 ; 0{,}5]$, longueur $0{,}5$).
+- **Décision d'Esteban** : retirer du PDF tout ce qui n'est pas maîtrisé ; il relit le PDF et dira ce
+  qu'on rajoute. Le PDF ne contient plus que la partie A (A.1 à A.3, figure théorique, sans
+  simulation). Pas d'annexe de démonstrations.
+- **À retravailler si on rajoute** : convolution (B.1) avant Erlang (B.2) ; densité ≠ probabilité.
+
 ## 2026-11-25 · Sujet 4 (file M/M/1) · tri des notions
 
 **Auto-évaluation** : 2 notions sur 16 maîtrisées (IPP pour $E[X]$ et $\operatorname{Var}X$ ;
