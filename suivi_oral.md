@@ -11,6 +11,8 @@ Journal des séances de préparation (la plus récente en haut).
   $1 -$ : éviter $\ln 0$) ; récurrence de la file M/M/1 (Q1, considérée acquise à sa demande).
 - **Pas connu** (hors rendu) : loi d'Erlang et convolution ; test de Kolmogorov-Smirnov ; chaînes
   de Markov ; méthode des lots.
+- **Point faible déclaré** : les raisonnements par récurrence (licence). Les présenter comme une
+  règle de mise à jour « état suivant = f(état actuel) », comme une boucle de code.
 - **Préférences** : pas de questions de détail ; le rendu ne reprend que ce qu'il connaît ou a
   choisi d'apprendre ; résultats de cours admis plutôt que redémontrés.
 
