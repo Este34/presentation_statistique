@@ -101,7 +101,7 @@ $n$-ième arrive.
   à $\rho = 0{,}8$, 9 à $0{,}9$, 19 à $0{,}95$ (figure en conclusion, page~\pageref{conclusion}).
 \end{itemize}
 
-{\bfseries\color{violet8}Les réponses en bref} {\small\color{gris8}(preuves en annexe A, page~\pageref{annexeA})}\par
+{\bfseries\color{violet8}Les réponses en bref}\par
 {\small
 \renewcommand{\arraystretch}{1.1}
 \begin{tabularx}{\linewidth}{@{}>{\leavevmode\color{violet8}\bfseries}p{1.3cm} >{\raggedright\arraybackslash}X >{\raggedleft\arraybackslash}p{0.9cm}@{}}
@@ -125,8 +125,8 @@ Q5 & $E[L] = \frac{\rho}{1-\rho}$, $\operatorname{Var}L = \frac{\rho}{(1-\rho)^2
 \newpage
 % ---------- Corps du rapport ----------
 {\color{violet8}\bfseries Méthode.} Tout est simulé en Python (numpy) à partir d'uniformes,
-avec la graine 2026 ; le code réutilisable est dans \texttt{src/stats\_td/files\_attente.py}. Les
-démonstrations sont regroupées en annexe A, le même code en Matlab (Octave) en annexe B.
+avec la graine 2026 ; le code réutilisable est dans \texttt{src/stats\_td/files\_attente.py}. Le
+même code en Matlab (exécuté sous Octave) est en annexe.
 
 \begin{tcolorbox}[coquille]
 \textbf{Coquilles de l'énoncé.} Q5 : « $\rho = \mu/\lambda$ » : lire $\rho = \lambda/\mu = 5/6$ (sinon
@@ -207,7 +207,7 @@ devant eux. L'algorithme n'utilise que l'inversion (écarts), le comptage ($A_n$
 la file gagne environ $\lambda - \mu$ clients par seconde. $\rho = 1{,}2$ ($\lambda = 120$, $\mu = 100$) :
 \textbf{1120 clients} après 60 s, $19{,}7$ de plus par seconde (théorie 20), $L_n/n = 0{,}157$ pour
 $1 - 1/\rho = 0{,}167$. Avec 5 \% de surcharge : 362 clients. Preuve : $L_n \ge \sum_{k<n}(1 - A_k)$,
-qui croît comme $n(1 - 1/\rho)$ par la loi des grands nombres (annexe A).
+qui croît comme $n(1 - 1/\rho)$ par la loi des grands nombres.
 \end{minipage}
 
 \question{Q4 · $\rho < 1$ : la file se stationnarise}\label{q4}
@@ -251,79 +251,9 @@ moyenne, un client sur six servi tout de suite, et un sur trois derrière plus d
 {\footnotesize\color{gris8}Points : file moyenne simulée (5 minutes par point, $\mu = 100$) ; trait : $\rho/(1-\rho)$.}
 \end{minipage}
 
-% ---------- Annexe A : démonstrations ----------
-\vspace{1.2em}
-{\color{violet8}\rule{\linewidth}{0.4pt}}
-\question{Annexe A · Démonstrations}\label{annexeA}
-{\small\color{gris8}Version condensée ; le détail (et les remarques pour l'oral) est dans
-\texttt{sujets/sujet4/demonstrations.md}. Notations : $G(x) = P(X \ge x)$, $T_0 = 0$.}
-
-{\setlength{\parskip}{0.5em}
-\textbf{\color{violet8}A.1} Densité $f(x) = \lambda e^{-\lambda x}$ ($x \ge 0$). Par IPP,
-$E[X] = [-xe^{-\lambda x}]_0^\infty + \int_0^\infty e^{-\lambda x}dx = \frac1\lambda$ et
-$E[X^2] = \frac2\lambda E[X] = \frac{2}{\lambda^2}$, donc
-$\operatorname{Var}X = \frac{2}{\lambda^2} - \frac{1}{\lambda^2} = \frac{1}{\lambda^2}$ :
-$\boxed{E[X] = \sigma_X = 1/\lambda}$.
-
-\textbf{\color{violet8}A.2} Pour $x, t \ge 0$, $\{X \ge x + t\} \subset \{X \ge x\}$, donc
-$P(X \ge x+t \mid X \ge x) = \frac{G(x+t)}{G(x)} = \frac{e^{-\lambda(x+t)}}{e^{-\lambda x}} = e^{-\lambda t} = G(t)$.
-
-\textbf{\color{violet8}A.3} Si $X \ge 0$, $G > 0$ et $(*)$ vaut pour tous $x, t \ge 0$ réels, alors
-$G(x+t) = G(x)G(t)$. $\varphi = \ln G$ est additive et décroissante. Par récurrence
-$\varphi(nx) = n\varphi(x)$, d'où $\varphi(r) = r\varphi(1)$ pour $r \ge 0$ rationnel ; en encadrant $x$
-par des rationnels $r \le x \le r'$ (monotonie), $\varphi(x) = x\varphi(1)$. Avec
-$\lambda = -\varphi(1) \ge 0$ ($G$ décroît) : $G(x) = e^{-\lambda x}$, et $\lambda \ne 0$ car $G(x) \to 0$.
-
-\textbf{\color{violet8}B.1} Par indépendance, la densité du couple est $f(x_1)g(x_2)$ :
-$P(Z \le z) = \int f(x_1)\int_{-\infty}^{z - x_1} g(x_2)\,dx_2\,dx_1$. Avec $x_2 = s - x_1$ puis
-Fubini-Tonelli : $P(Z \le z) = \int_{-\infty}^{z}\big(\int f(x)g(s-x)\,dx\big)ds$, donc
-$f_Z = f * g$.
-
-\textbf{\color{violet8}B.2} $f_2(x) = \int_0^x \lambda e^{-\lambda u}\lambda e^{-\lambda(x-u)}du =
-\lambda^2 x e^{-\lambda x}$. Récurrence : $T_{k+1} = T_k + I_{k+1}$ avec $I_{k+1}$ indépendant de
-$T_k$, donc $f_{k+1}(x) = \int_0^x \frac{\lambda^k u^{k-1}}{(k-1)!}e^{-\lambda u}\lambda e^{-\lambda(x-u)}du
-= \lambda^{k+1}e^{-\lambda x}\frac{x^k}{k!}$.
-
-\textbf{\color{violet8}B.3} $\{N_t = k\} = \{T_k \le t < T_{k+1}\}$ et
-$\{T_{k+1} \le t\} \subset \{T_k \le t\}$, donc $P(N_t = k) = F_k(t) - F_{k+1}(t)$. Une IPP sur
-$F_{k+1}(t)$ donne $F_{k+1}(t) = F_k(t) - e^{-\lambda t}\frac{(\lambda t)^k}{k!}$ ; et
-$P(N_t = 0) = P(T_1 > t) = e^{-\lambda t}$.
-
-\textbf{\color{violet8}Simulation 1} $X = -\frac1\lambda\ln U \ge 0$ et, pour $x \ge 0$,
-$P(X \ge x) = P(U \le e^{-\lambda x}) = e^{-\lambda x}$ ($\exp$ croissante,
-$P(U \le u) = u$).
-
-\textbf{\color{violet8}Simulation 2} Les $Z_i$ sont les instants d'un processus de Poisson
-d'intensité $\lambda$ : $\sum_i \mathbb 1_{Z_i \le 1} = N_1 \sim \mathcal P(\lambda)$ par B.3. On
-additionne donc des $\mathcal E(\lambda)$ jusqu'à dépasser 1 et on compte ; coût moyen $\lambda + 1$
-uniformes.
-
-\textbf{\color{violet8}Q1} Tant que la file n'est pas vide, le service en cours se termine au taux
-$\mu$ quel que soit son âge (A.2) : les départs sont les points d'un processus de Poisson $N$
-d'intensité $\mu$, ceux qui tombent quand la file est vide étant perdus. Après $T_n$ il y a $L_n + 1$
-clients, il en part $\min(A_n, L_n + 1)$, d'où $L_{n+1} = (L_n + 1 - A_n)^+$. Sachant
-$T_{n+1} - T_n = s$, $A_n \sim \mathcal P(\mu s)$ ($N$ est indépendant des arrivées et ses accroissements
-sur des intervalles disjoints sont indépendants : les $A_n$ sont indépendants et de même loi), d'où
-$P(A_n = k) = \int_0^\infty \lambda e^{-\lambda s}e^{-\mu s}\frac{(\mu s)^k}{k!}ds = p\,q^k$ avec
-$p = \frac{\lambda}{\lambda+\mu}$, $q = \frac{\mu}{\lambda+\mu}$ : loi géométrique, $E[A_n] = \mu/\lambda$.
-
-\textbf{\color{violet8}Q3} Avec $S_n = \sum_{k<n}(1 - A_k)$, une récurrence donne la formule de
-Lindley $L_n = S_n - \min_{k \le n}S_k \ge S_n$. Par la loi forte des grands nombres,
-$S_n/n \to 1 - \frac1\rho > 0$ si $\rho > 1$ : $L_n \to \infty$ et $L_n/n \to 1 - \frac1\rho$.
-
-\textbf{\color{violet8}Q4} Si $\rho < 1$, $S_n/n \to 1 - \frac1\rho < 0$ : $S_n \to -\infty$, le minimum
-de Lindley est sans cesse battu et $L_n = 0$ une infinité de fois : la file ne dérive pas.
-
-\textbf{\color{violet8}Q5} La loi $P(L = k) = (1-\rho)\rho^k$ est vérifiée par simulation. On en déduit, avec
-$\sum_k k\rho^k = \frac{\rho}{(1-\rho)^2}$ et
-$\sum_k k(k-1)\rho^k = \frac{2\rho^2}{(1-\rho)^3}$ :
-$E[L] = \frac{\rho}{1-\rho}$, $\operatorname{Var}L = \frac{2\rho^2}{(1-\rho)^2} + \frac{\rho}{1-\rho} - \frac{\rho^2}{(1-\rho)^2} = \frac{\rho}{(1-\rho)^2}$,
-$P(L = 0) = 1 - \rho$, $P(L > 5) = \sum_{k \ge 6}(1-\rho)\rho^k = \rho^6$.
-}
-
-% ---------- Annexe B : Matlab / Python ----------
+% ---------- Annexe : Matlab / Python ----------
 \newpage
-\question{Annexe B · Le même TD en Matlab et en Python}
+\question{Annexe · Le même TD en Matlab et en Python}
 Le même code en Matlab (exécuté sous GNU Octave 8.4) et en Python (scripts dans
 \texttt{sujets/sujet4/matlab/}).
 
