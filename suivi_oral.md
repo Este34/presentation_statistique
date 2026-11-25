@@ -2,6 +2,19 @@
 
 Journal des séances de préparation (la plus récente en haut).
 
+## Acquis (à tenir à jour)
+
+- **Connu de la licence MIASHS** (déclaré par Esteban) : loi de Poisson, loi exponentielle,
+  intégration par parties.
+- **Vérifié en séance** : moyenne et écart-type de $\mathcal E(\lambda)$ par IPP ; absence de mémoire ;
+  unicité de l'exponentielle (énoncée comme résultat) ; inversion $-\ln(1-U)/\lambda$ (même loi que
+  $U$ : oui ; rôle du $1 -$ pour éviter $\ln 0$ : à retenir).
+- **Pas encore maîtrisé** (hors rendu pour l'instant) : densité d'une somme (convolution) et loi
+  d'Erlang ; récurrence de la file M/M/1 (Q1) ; tests KS et $\chi^2$ ; erreur-type et méthode des
+  lots ; chaînes de Markov.
+- **Préférences** : pas de questions de détail ; le rendu ne reprend que ce qu'il connaît ou a
+  choisi d'apprendre ; résultats de cours admis plutôt que redémontrés.
+
 ---
 
 ## 2026-11-25 · Sujet 4 · convolution, puis rendu réduit à la partie A
