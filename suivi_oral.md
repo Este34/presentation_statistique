@@ -13,6 +13,8 @@ Journal des séances de préparation (la plus récente en haut).
   qu'on rajoute. Le PDF ne contient plus que la partie A (A.1 à A.3, figure théorique, sans
   simulation). Pas d'annexe de démonstrations.
 - **À retravailler si on rajoute** : convolution (B.1) avant Erlang (B.2) ; densité ≠ probabilité.
+- Après relecture, **inversion remise** dans le PDF à sa demande (simulation de $\mathcal E(\lambda)$ par
+  $-\ln(1-U)/\lambda$), mise en page aérée, une équation par ligne. Compréhension de l'inversion à vérifier.
 
 ## 2026-11-25 · Sujet 4 (file M/M/1) · tri des notions
 

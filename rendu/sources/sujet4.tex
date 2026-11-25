@@ -29,7 +29,7 @@
   \fancyfoot[C]{\small\color{gris8}\thepage\,/\,\pageref{LastPage}}}
 \newcommand{\etiquette}[1]{\leavevmode{\scriptsize\addfontfeatures{LetterSpace=8}\color{gris8}\MakeUppercase{#1}}}
 
-\newcommand{\question}[1]{\needspace{10\baselineskip}\vspace{0.5em}{\large\bfseries\color{violet8}#1}\par\vspace{0.25em}}
+\newcommand{\question}[1]{\needspace{8\baselineskip}\vspace{1.4em}{\large\bfseries\color{violet8}#1}\par\vspace{0.4em}}
 \newcommand{\lecture}{{\bfseries\color{rouge8}Lecture.}\ }
 \newcommand{\resultat}{{\bfseries\color{violet8}Résultat.}\ }
 % carte « chiffre clé » de la synthèse : couleur, chiffre, légende
@@ -46,7 +46,8 @@
 \tcbset{coquille/.style={colback=rouge8!5,colframe=rouge8!70,boxrule=0.5pt,arc=2pt,
   left=5pt,right=5pt,top=3pt,bottom=3pt,fontupper=\small}}
 
-\setlength{\parindent}{0pt}\setlength{\parskip}{0.35em}
+\setlength{\parindent}{0pt}\setlength{\parskip}{0.6em}
+\setlength{\jot}{7pt}
 \setlist{nosep,leftmargin=1.2em}
 
 \begin{document}
@@ -73,57 +74,126 @@ Master Informatique I2A\\Année 2026-2027\end{minipage}
 \begin{tabularx}{\linewidth}{@{}p{2.2cm} >{\raggedright\arraybackslash}X p{2.2cm} >{\raggedright\arraybackslash}p{3.2cm}@{}}
 \etiquette{Auteur} & \textbf{Esteban BERETTI--PRENANT} & \etiquette{Enseignant} & M. Zerzeri \\
 \etiquette{Formation} & Master Informatique I2A, Université Paris 8 & \etiquette{Date} & 25/11/2026 \\
-\etiquette{Outils} & Python (numpy, matplotlib) & & \\
+\etiquette{Outils} & Python (numpy, matplotlib) & \etiquette{Graine} & 2026 \\
 \etiquette{Dépôt} & \multicolumn{3}{l}{\href{https://github.com/Este34/presentation_statistique}{\color{violet8}github.com/Este34/presentation\_statistique}\ \ {\color{gris8}\small(code, tests, notebooks)}} \\
 \end{tabularx}
 \end{tcolorbox}
 
 % ---------- Synthèse ----------
-\vspace{0.3em}{\large\bfseries\color{violet8}Synthèse}\par\vspace{0.1em}
+\vspace{0.6em}{\large\bfseries\color{violet8}Synthèse}\par\vspace{0.3em}
 Dans la file M/M/1, les temps de service suivent une loi exponentielle. Ce rendu étudie cette loi
-(partie A du sujet) : ses deux paramètres de forme, et la propriété qui la caractérise, l'absence
-de mémoire.
+(partie A du sujet) et la façon de la simuler : sa moyenne et son écart-type, la propriété qui la
+caractérise (l'absence de mémoire), et sa simulation par inversion.
 
+\vspace{0.4em}
 {\small
-\renewcommand{\arraystretch}{1.25}
-\begin{tabularx}{\linewidth}{@{}>{\leavevmode\color{violet8}\bfseries}p{1.0cm} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}p{5.2cm}@{}}
+\renewcommand{\arraystretch}{1.6}
+\begin{tabularx}{\linewidth}{@{}>{\leavevmode\color{violet8}\bfseries}p{1.6cm} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}p{5cm}@{}}
 \toprule
  & \textbf{Résultat} & \textbf{Pourquoi} \\ \midrule
-A.1 & $E[X] = \sigma_X = \dfrac{1}{\lambda}$ : moyenne et écart-type égaux & intégration par parties \\
-A.2 & $P(X \ge x + t \mid X \ge x) = P(X \ge t)$ : ce qui reste à attendre ne dépend pas de ce qui est écoulé & $\{X \ge x + t\} \subset \{X \ge x\}$ et $e^{-\lambda(x+t)}/e^{-\lambda x} = e^{-\lambda t}$ \\
+A.1 & $E[X] = \sigma_X = 1/\lambda$ : moyenne et écart-type égaux & intégration par parties \\
+A.2 & $P(X \ge x + t \mid X \ge x) = P(X \ge t)$ : ce qui reste à attendre ne dépend pas de ce qui est écoulé & inclusion des événements \\
 A.3 & c'est la \textbf{seule} loi sans mémoire & $G(x+t) = G(x)G(t)$ force $G(x) = e^{-\lambda x}$ \\
+Simulation & $X = -\frac{1}{\lambda}\ln U$ suit $\mathcal E(\lambda)$ si $U \sim \mathcal U[0, 1]$ & l'exponentielle est croissante \\
 \bottomrule
 \end{tabularx}}
 
+\newpage
+% ---------- A.1 ----------
 \question{A.1 · Moyenne et écart-type}
-\resultat La densité est $f(x) = \lambda e^{-\lambda x}$ pour $x \ge 0$ (dérivée de
-$1 - P(X \ge x) = 1 - e^{-\lambda x}$). Par intégration par parties,
-$E[X] = \big[-x e^{-\lambda x}\big]_0^{\infty} + \int_0^{\infty} e^{-\lambda x}\,dx = \frac{1}{\lambda}$,
-puis $E[X^2] = \frac{2}{\lambda}E[X] = \frac{2}{\lambda^2}$, donc
-$\operatorname{Var}X = E[X^2] - E[X]^2 = \frac{1}{\lambda^2}$ et $\boxed{E[X] = \sigma_X = 1/\lambda}$.
+La loi est donnée par $P(X \ge x) = e^{-\lambda x}$ pour $x \ge 0$. Sa densité est la dérivée de
+$P(X \le x) = 1 - e^{-\lambda x}$ :
+\begin{align*}
+f(x) &= \lambda e^{-\lambda x}, \qquad x \ge 0.
+\end{align*}
+Moyenne, par intégration par parties ($u = x$, $v' = \lambda e^{-\lambda x}$) :
+\begin{align*}
+E[X] &= \int_0^{\infty} x\,\lambda e^{-\lambda x}\,dx \\
+     &= \Big[-x e^{-\lambda x}\Big]_0^{\infty} + \int_0^{\infty} e^{-\lambda x}\,dx \\
+     &= 0 + \frac{1}{\lambda}.
+\end{align*}
+Moment d'ordre 2, même méthode ($u = x^2$) :
+\begin{align*}
+E[X^2] &= \Big[-x^2 e^{-\lambda x}\Big]_0^{\infty} + 2\int_0^{\infty} x e^{-\lambda x}\,dx \\
+       &= \frac{2}{\lambda}\,E[X] \\
+       &= \frac{2}{\lambda^2}.
+\end{align*}
+Variance et écart-type :
+\begin{align*}
+\operatorname{Var}X &= E[X^2] - E[X]^2 = \frac{2}{\lambda^2} - \frac{1}{\lambda^2} = \frac{1}{\lambda^2}, \\
+\sigma_X &= \frac{1}{\lambda}.
+\end{align*}
+\begin{center}
+\fcolorbox{violet8}{fond}{\ $E[X] = \sigma_X = \dfrac{1}{\lambda}$\ }
+\end{center}
 
+% ---------- A.2 ----------
 \question{A.2 · L'absence de mémoire}
-\resultat Pour $x, t \ge 0$, l'événement $\{X \ge x + t\}$ est inclus dans $\{X \ge x\}$, donc
-$P(X \ge x + t \mid X \ge x) = \frac{P(X \ge x+t)}{P(X \ge x)} = \frac{e^{-\lambda(x+t)}}{e^{-\lambda x}} = e^{-\lambda t} = P(X \ge t)$.
+Pour $x, t \ge 0$, l'événement $\{X \ge x + t\}$ est inclus dans $\{X \ge x\}$, et
+$P(X \ge x) = e^{-\lambda x} > 0$ :
+\begin{align*}
+P(X \ge x + t \mid X \ge x) &= \frac{P(X \ge x + t,\ X \ge x)}{P(X \ge x)} \\
+                            &= \frac{P(X \ge x + t)}{P(X \ge x)} \\
+                            &= \frac{e^{-\lambda(x+t)}}{e^{-\lambda x}} \\
+                            &= e^{-\lambda t} \\
+                            &= P(X \ge t).
+\end{align*}
 Si $X$ est une durée de vie, la durée de vie restante ne dépend pas de l'âge.
 
-\vspace{0.5em}{\large\bfseries\color{violet8}A.3 · La seule loi sans mémoire}\par\vspace{0.25em}
-\resultat Avec $G(x) = P(X \ge x) > 0$, la propriété s'écrit $G(x + t) = G(x)\,G(t)$ pour tous
-$x, t \ge 0$. Alors $\ln G$ est additive et décroissante : elle est linéaire sur les rationnels, puis
-sur tous les réels grâce à la monotonie. Donc $G(x) = e^{-\lambda x}$ avec $\lambda > 0$ : $X$ suit
-une loi exponentielle.
+% ---------- A.3 ----------
+\question{A.3 · La seule loi sans mémoire}
+On note $G(x) = P(X \ge x)$, avec $G(x) > 0$, et on suppose la propriété vraie pour tous
+$x, t \ge 0$. Comme en A.2, elle s'écrit :
+\begin{align*}
+G(x + t) &= G(x)\,G(t).
+\end{align*}
+Avec $\varphi = \ln G$, qui est décroissante :
+\begin{align*}
+\varphi(x + t) &= \varphi(x) + \varphi(t), \\
+\varphi(n x) &= n\,\varphi(x) && \text{(récurrence sur } n\text{)}, \\
+\varphi(p/q) &= \tfrac{p}{q}\,\varphi(1) && \text{(rationnels)}, \\
+\varphi(x) &= x\,\varphi(1) && \text{(réels, par monotonie)}.
+\end{align*}
+En posant $\lambda = -\varphi(1) > 0$ :
+\begin{center}
+\fcolorbox{violet8}{fond}{\ $G(x) = e^{-\lambda x}$ : $X$ suit une loi exponentielle\ }
+\end{center}
 
 \begin{center}\includegraphics[width=\linewidth]{../../sujets/sujet4/figures/s4a_theorie.png}\end{center}
-\vspace{-0.6em}
+\vspace{-0.4em}
 \lecture À gauche, plus $\lambda$ est grand, plus les durées sont courtes ; la moyenne $1/\lambda$
 (tirets) est aussi l'écart-type. Au centre, pour $\mathcal E(2)$, la probabilité de durer encore
-$t = 0{,}5$ vaut $e^{-1} = 0{,}368$ quel que soit l'âge : les trois courbes sont confondues. À droite,
-contre-exemple : pour la loi uniforme sur $[0, 1]$, la probabilité de durer encore $0{,}25$ passe de
-$0{,}75$ (âge 0) à $0{,}5$ (âge $0{,}5$) : plus elle a duré, plus la fin est proche.
+$t = 0{,}5$ vaut $e^{-1} = 0{,}368$ quel que soit l'âge. À droite, contre-exemple : pour la loi
+uniforme sur $[0, 1]$, la probabilité de durer encore $0{,}25$ passe de $0{,}75$ (âge 0) à $0{,}5$
+(âge $0{,}5$) : plus elle a duré, plus la fin est proche.
 
-\vspace{0.4em}
-\textbf{\color{violet8}Conclusion.} La loi exponentielle a une moyenne et un écart-type égaux à
-$1/\lambda$, et c'est la seule loi sans mémoire. Pour la file M/M/1, cela veut dire qu'un client en
-cours de service a toujours un temps restant de même loi, quel que soit le temps déjà passé.
+% ---------- Simulation ----------
+\newpage
+\question{Simulation · Tirer une loi exponentielle par inversion}
+Si $U$ suit la loi uniforme sur $[0, 1]$, alors $X = -\frac{1}{\lambda}\ln U \ge 0$ et, pour $x \ge 0$ :
+\begin{align*}
+P(X \ge x) &= P\Big(-\tfrac{1}{\lambda}\ln U \ge x\Big) \\
+           &= P(\ln U \le -\lambda x) && \text{(on multiplie par } -\lambda < 0\text{)} \\
+           &= P(U \le e^{-\lambda x}) && \text{(l'exponentielle est croissante)} \\
+           &= e^{-\lambda x} && \text{(car } P(U \le u) = u\text{)}.
+\end{align*}
+Donc $X$ suit $\mathcal E(\lambda)$. Dans le code on prend $1 - U$, qui a la même loi que $U$ mais ne
+vaut jamais 0, pour ne pas calculer $\ln 0$ :
+\begin{lstlisting}
+X = -np.log(1 - rng.random(100_000)) / lam    # 100 000 tirages, λ = 2
+reste = X[X >= x] - x                          # durée de vie restante à l'âge x
+\end{lstlisting}
+\begin{center}\includegraphics[width=\linewidth]{../../sujets/sujet4/figures/s4a_simulation.png}\end{center}
+\vspace{-0.4em}
+\lecture L'histogramme suit la densité $\lambda e^{-\lambda x}$ ; la moyenne ($0{,}498$) et l'écart-type
+($0{,}499$) sont tous deux proches de $1/\lambda = 0{,}5$ (A.1). Pour les âges 0 ; $0{,}5$ et 1, la
+probabilité de durer encore $0{,}5$ vaut $0{,}366$ ; $0{,}368$ et $0{,}369$, contre $e^{-1} = 0{,}368$ :
+l'absence de mémoire se voit aussi sur les valeurs simulées (A.2).
+
+\question{Conclusion}
+La loi exponentielle a une moyenne et un écart-type égaux à $1/\lambda$, et c'est la seule loi sans
+mémoire. On la simule avec une seule ligne, $-\ln(1 - U)/\lambda$. Pour la file M/M/1, l'absence de
+mémoire veut dire qu'un client en cours de service a toujours un temps restant de même loi, quel que
+soit le temps déjà passé.
 \label{fin}
 \end{document}
