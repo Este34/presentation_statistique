@@ -81,36 +81,38 @@ Master Informatique I2A\\Année 2026-2027\end{minipage}
 
 % ---------- Synthèse ----------
 \vspace{0.6em}{\large\bfseries\color{violet8}Synthèse}\par\vspace{0.3em}
-Dans la file M/M/1, les temps de service suivent une loi exponentielle et les arrivées un processus
-de Poisson. Ce rendu étudie ces deux briques (la loi exponentielle, sa simulation par inversion, la loi de
-Poisson et sa simulation), puis la file elle-même : sa récurrence, sa simulation et le rôle de la
+Dans une file M/M/1, les temps de service suivent une loi exponentielle et les arrivées forment un
+processus de Poisson. Ce rendu présente la loi exponentielle, sa simulation par inversion, la loi de
+Poisson et sa simulation, puis la file elle-même : sa récurrence, sa simulation et le rôle de la
 charge $\rho = \lambda/\mu$.
 
-\vspace{0.4em}
+\vspace{0.6em}{\bfseries\color{violet8}Résultats}\par\vspace{0.2em}
 {\small
-\renewcommand{\arraystretch}{1.6}
-\begin{tabularx}{\linewidth}{@{}>{\leavevmode\color{violet8}\bfseries}p{1.6cm} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}p{5cm}@{}}
+\renewcommand{\arraystretch}{1.7}
+\begin{tabularx}{\linewidth}{@{}>{\leavevmode\raggedright\color{violet8}\bfseries}p{2.6cm} >{\raggedright\arraybackslash}X@{}}
 \toprule
- & \textbf{Résultat} & \textbf{Pourquoi} \\ \midrule
-A.1 & $E[X] = \sigma_X = 1/\lambda$ : moyenne et écart-type égaux & intégration par parties \\
-A.2 & $P(X \ge x + t \mid X \ge x) = P(X \ge t)$ : ce qui reste à attendre ne dépend pas de ce qui est écoulé & inclusion des événements \\
-A.3 & c'est la \textbf{seule} loi sans mémoire & $G(x+t) = G(x)G(t)$ force $G(x) = e^{-\lambda x}$ \\
-Simulation & $X = -\frac{1}{\lambda}\ln U$ suit $\mathcal E(\lambda)$ si $U \sim \mathcal U[0, 1]$ & l'exponentielle est croissante \\
-B.3 & le nombre $N_t$ d'événements dans $[0, t]$ suit la loi de Poisson $\mathcal P(\lambda t)$ & résultat de cours \\
-Simulation & compter les durées $\mathcal E(\lambda)$ qui tiennent dans $[0, 1]$ donne $\mathcal P(\lambda)$ & B.3 avec $t = 1$ \\
-Q1 & $L_{n+1} = \max(0,\ L_n + 1 - A_n)$ & on ne peut pas servir plus de clients qu'il n'y en a \\
-Q2 & boucle : écart par inversion, $A_n$ par comptage, puis Q1 & assemblage des outils \\
-Q3 & $\rho > 1$ : la file gagne environ $\lambda - \mu$ clients par seconde & loi des grands nombres \\
-Q4 & $\rho < 1$ : la file revient sans cesse à 0, la moyenne se stabilise & simulation \\
-Q5 & $E[L] = \frac{\rho}{1-\rho}$, $\operatorname{Var}L = \frac{\rho}{(1-\rho)^2}$, $P(L = 0) = 1 - \rho$, $P(L > 5) = \rho^6$ & loi géométrique, séries \\
+A.1 & Pour une variable exponentielle $X$, la moyenne et l'écart-type valent tous deux $1/\lambda$ ; on l'obtient par intégration par parties. \\
+A.2 & $P(X \ge x + t \mid X \ge x) = P(X \ge t)$ : le temps restant à attendre ne dépend pas du temps déjà écoulé. \\
+A.3 & La loi exponentielle est la seule loi sans mémoire. Elle vérifie $G(x+t) = G(x)G(t)$, ce qui impose $G(x) = e^{-\lambda x}$. \\
+Simulation exponentielle & On génère $X = -\frac{1}{\lambda}\ln U$ avec $U \sim \mathcal U[0, 1]$ ; ainsi $X$ suit la loi $\mathcal E(\lambda)$. \\
+B.3 & Le nombre $N_t$ d'événements dans l'intervalle $[0, t]$ suit la loi de Poisson $\mathcal P(\lambda t)$ (résultat de cours). \\
+Simulation de Poisson & En comptant les durées qui suivent $\mathcal E(\lambda)$ et qui tiennent dans $[0, 1]$, on obtient une loi $\mathcal P(\lambda)$ ($t = 1$). \\
+Q1 & La récurrence $L_{n+1} = \max(0,\ L_n + 1 - A_n)$ empêche de servir plus de clients qu'il n'en existe. \\
+Q2 & Boucle d'algorithme : écart entre deux arrivées par inversion, comptage des services possibles $A_n$, puis mise à jour de la file avec la formule de la Q1. \\
+Q3 & Si $\rho > 1$, la file augmente d'environ $\lambda - \mu$ clients par seconde, conformément à la loi des grands nombres. \\
+Q4 & Si $\rho < 1$, la file revient régulièrement à zéro et sa longueur moyenne se stabilise, comme le montre la simulation. \\
+Q5 & $E[L] = \frac{\rho}{1-\rho}$, $\operatorname{Var}L = \frac{\rho}{(1-\rho)^2}$, $P(L = 0) = 1 - \rho$, $P(L > 5) = \rho^6$ (loi géométrique, séries). \\
 \bottomrule
 \end{tabularx}}
 
 \newpage
 % ---------- A.1 ----------
 \question{A.1 · Moyenne et écart-type}
-La loi est donnée par $P(X \ge x) = e^{-\lambda x}$ pour $x \ge 0$. Sa densité est la dérivée de
-$P(X \le x) = 1 - e^{-\lambda x}$ :
+La loi s'écrit
+\begin{align*}
+P(X \ge x) &= e^{-\lambda x}, \qquad x \ge 0.
+\end{align*}
+Sa densité est la dérivée de $P(X \le x) = 1 - e^{-\lambda x}$ :
 \begin{align*}
 f(x) &= \lambda e^{-\lambda x}, \qquad x \ge 0.
 \end{align*}
@@ -131,6 +133,7 @@ Variance et écart-type :
 \operatorname{Var}X &= E[X^2] - E[X]^2 = \frac{2}{\lambda^2} - \frac{1}{\lambda^2} = \frac{1}{\lambda^2}, \\
 \sigma_X &= \frac{1}{\lambda}.
 \end{align*}
+On remarque que :
 \begin{center}
 \fcolorbox{violet8}{fond}{\ $E[X] = \sigma_X = \dfrac{1}{\lambda}$\ }
 \end{center}
@@ -146,40 +149,45 @@ P(X \ge x + t \mid X \ge x) &= \frac{P(X \ge x + t,\ X \ge x)}{P(X \ge x)} \\
                             &= e^{-\lambda t} \\
                             &= P(X \ge t).
 \end{align*}
-Si $X$ est une durée de vie, la durée de vie restante ne dépend pas de l'âge.
+Si $X$ représente une durée de vie, la durée qui reste ne dépend pas de l'âge déjà atteint.
 
 % ---------- A.3 ----------
 \newpage
 \vspace{0.5em}{\large\bfseries\color{violet8}A.3 · La seule loi sans mémoire}\par\vspace{0.4em}
-Avec $G(x) = P(X \ge x)$, l'absence de mémoire s'écrit (comme en A.2) :
+Avec $G(x) = P(X \ge x)$, l'absence de mémoire s'écrit, comme en A.2,
 \begin{align*}
+P(X \ge x + t \mid X \ge x) &= G(t), \\
 G(x + t) &= G(x)\,G(t) \qquad \text{pour tous } x, t \ge 0.
 \end{align*}
-La seule fonction positive et décroissante qui vérifie cette relation est l'exponentielle :
+La fonction positive et décroissante qui satisfait cette équation est l'exponentielle :
 \begin{center}
-\fcolorbox{violet8}{fond}{\ $G(x) = e^{-\lambda x}$ : une loi sans mémoire est forcément exponentielle\ }
+\fcolorbox{violet8}{fond}{\ $G(x) = e^{-\lambda x}$. Une loi sans mémoire doit donc être exponentielle.\ }
 \end{center}
 
 \begin{center}\includegraphics[width=\linewidth]{../../sujets/sujet4/figures/s4a_theorie.png}\end{center}
 \vspace{-0.4em}
-\lecture À gauche, plus $\lambda$ est grand, plus les durées sont courtes ; la moyenne $1/\lambda$
-(tirets) est aussi l'écart-type. Au centre, pour $\mathcal E(2)$, la probabilité de durer encore
-$t = 0{,}5$ vaut $e^{-1} = 0{,}368$ quel que soit l'âge. À droite, contre-exemple : pour la loi
-uniforme sur $[0, 1]$, la probabilité de durer encore $0{,}25$ passe de $0{,}75$ (âge 0) à $0{,}5$
-(âge $0{,}5$) : plus elle a duré, plus la fin est proche.
+\lecture À gauche, quand $\lambda$ augmente, les durées deviennent plus courtes ; la moyenne $1/\lambda$
+(tirets) coïncide avec l'écart-type. Au centre, pour la loi $\mathcal E(2)$, la probabilité de survivre
+encore $0{,}5$ vaut $e^{-1} = 0{,}368$, quel que soit l'âge. À droite, contre-exemple : pour la loi
+uniforme sur $[0, 1]$, la probabilité de survivre encore $0{,}25$ passe de $0{,}75$ (âge 0) à $0{,}5$
+(âge $0{,}5$) ; plus la durée s'allonge, plus la fin se rapproche.
 
 % ---------- Simulation ----------
 \newpage
 \question{Simulation · Tirer une loi exponentielle par inversion}
-Si $U$ suit la loi uniforme sur $[0, 1]$, alors $X = -\frac{1}{\lambda}\ln U \ge 0$ et, pour $x \ge 0$ :
+Si $U$ suit la loi uniforme sur $[0, 1]$, alors
+\begin{align*}
+X &= -\frac{1}{\lambda}\ln U \ge 0
+\end{align*}
+et, pour $x \ge 0$ :
 \begin{align*}
 P(X \ge x) &= P\Big(-\tfrac{1}{\lambda}\ln U \ge x\Big) \\
            &= P(\ln U \le -\lambda x) && \text{(on multiplie par } -\lambda < 0\text{)} \\
            &= P(U \le e^{-\lambda x}) && \text{(l'exponentielle est croissante)} \\
            &= e^{-\lambda x} && \text{(car } P(U \le u) = u\text{)}.
 \end{align*}
-Donc $X$ suit $\mathcal E(\lambda)$. Dans le code on prend $1 - U$, qui a la même loi que $U$ mais ne
-vaut jamais 0, pour ne pas calculer $\ln 0$ :
+Donc $X$ suit la loi $\mathcal E(\lambda)$. Dans le code on utilise $1 - U$, qui a la même loi que $U$
+mais ne vaut jamais 0, pour éviter le calcul de $\ln 0$ :
 \begin{lstlisting}
 X = -np.log(1 - rng.random(100_000)) / lam    # 100 000 tirages, λ = 2
 reste = X[X >= x] - x                          # durée de vie restante à l'âge x
@@ -187,21 +195,21 @@ reste = X[X >= x] - x                          # durée de vie restante à l'âg
 \begin{center}\includegraphics[width=\linewidth]{../../sujets/sujet4/figures/s4a_simulation.png}\end{center}
 \vspace{-0.4em}
 \lecture L'histogramme suit la densité $\lambda e^{-\lambda x}$ ; la moyenne ($0{,}498$) et l'écart-type
-($0{,}499$) sont tous deux proches de $1/\lambda = 0{,}5$ (A.1). Pour les âges 0 ; $0{,}5$ et 1, la
-probabilité de durer encore $0{,}5$ vaut $0{,}366$ ; $0{,}368$ et $0{,}369$, contre $e^{-1} = 0{,}368$ :
-l'absence de mémoire se voit aussi sur les valeurs simulées (A.2).
+($0{,}499$) sont proches de $1/\lambda = 0{,}5$ (voir A.1). Pour les âges $0$, $0{,}5$ et $1$, la
+probabilité de survivre encore $0{,}5$ vaut $0{,}366$ ; $0{,}368$ ; $0{,}369$, ce qui se rapproche de
+$e^{-1} = 0{,}368$ : l'absence de mémoire apparaît aussi sur les valeurs simulées (voir A.2).
 
 \newpage
 % ---------- Poisson ----------
 \question{B.3 · Le nombre d'événements suit une loi de Poisson}
 Dans un processus de Poisson d'intensité $\lambda$, les durées entre deux événements sont
-indépendantes et suivent $\mathcal E(\lambda)$. Le nombre $N_t$ d'événements dans $[0, t]$ suit alors la
-loi de Poisson de paramètre $\lambda t$ (résultat de cours) :
+indépendantes et suivent une loi exponentielle $\mathcal E(\lambda)$. Le nombre $N_t$ d'événements dans
+l'intervalle $[0, t]$ suit alors une loi de Poisson de paramètre $\lambda t$ (résultat du cours) :
 \begin{align*}
 P(N_t = k) &= e^{-\lambda t}\,\frac{(\lambda t)^k}{k!}, \qquad k = 0, 1, 2, \dots \\
 E[N_t] &= \lambda t.
 \end{align*}
-$\lambda$ est donc bien le nombre moyen d'événements par unité de temps.
+Ainsi $\lambda$ représente le nombre moyen d'événements par unité de temps.
 
 \question{Simulation · Tirer une loi de Poisson en comptant}
 Avec $t = 1$, $N_1$ suit $\mathcal P(\lambda)$. Pour le simuler, on additionne des durées
@@ -220,26 +228,27 @@ def nombre_points_poisson(lam, duree, rng):     # loi P(lam * duree)
 \begin{center}\includegraphics[width=\linewidth]{../../sujets/sujet4/figures/s4b_poisson_rendu.png}\end{center}
 \vspace{-0.4em}
 \lecture À gauche, $\lambda = 2$ sur $[0, 3]$ : les fréquences suivent $\mathcal P(6)$, moyenne $5{,}99$
-pour $\lambda t = 6$. À droite, $\lambda = 4$ sur $[0, 1]$ : moyenne $3{,}99$ et variance $3{,}96$, en théorie toutes deux
-égales à 4 ; l'écart vient du hasard de l'échantillon. Le test du $\chi^2$ d'adéquation à $\mathcal P(4)$
+pour $\lambda t = 6$. À droite, $\lambda = 4$ sur $[0, 1]$ : moyenne $3{,}99$ et variance $3{,}96$, en théorie les deux
+valeurs sont égales à 4 ; l'écart vient du hasard de l'échantillon. Le test du $\chi^2$ d'adéquation à $\mathcal P(4)$
 donne $p = 0{,}37$ : aucune raison de rejeter la loi de Poisson.
 
 \newpage
 % ---------- File M/M/1 ----------
 \question{La file M/M/1}
-Les clients arrivent selon un processus de Poisson d'intensité $\lambda$, chacun est servi en un temps
-$\mathcal E(\mu)$, un seul serveur, dans l'ordre d'arrivée. $L_n$ est le nombre de clients présents
-(en attente et en service) juste avant l'arrivée du $n$-ième client ; la file est vide au départ.
+Les clients arrivent selon un processus de Poisson d'intensité $\lambda$. Chaque client est servi
+pendant un temps exponentiel $\mathcal E(\mu)$. Il n'y a qu'un seul serveur et les clients sont servis
+dans l'ordre d'arrivée. $L_n$ désigne le nombre de clients présents (en attente et en service) juste avant l'arrivée du $n$-ième client ; la file est vide au départ.
 
 \begin{tcolorbox}[coquille]
 \textbf{Coquilles de l'énoncé.} Q5 : « $\rho = \mu/\lambda$ » : lire $\rho = \lambda/\mu = 5/6$ (sinon
-$(1-\rho)\rho^k < 0$). « Capacité du serveur infinie » : c'est la salle d'attente. « Cet= algorithme ».
+$(1-\rho)\rho^k < 0$). « Capacité du serveur infinie » : il s'agit simplement de la salle d'attente. « Cet= algorithme ».
 « Plus de 5 clients » est lu $L > 5$.
 \end{tcolorbox}
 
 \question{Q1 · La récurrence}
-$N(t)$, processus de Poisson d'intensité $\mu$, donne les instants où un service \textbf{pourrait} se
-terminer (absence de mémoire, A.2). Entre l'arrivée $n$ et l'arrivée $n + 1$, il y en a $A_n$ :
+$N(t)$ est un processus de Poisson d'intensité $\mu$ qui indique les instants où un service
+\textbf{peut} se terminer (absence de mémoire, A.2). Entre l'arrivée $n$ et l'arrivée $n + 1$, on note
+$A_n$ le nombre de services possibles :
 \begin{align*}
 \text{clients juste après l'arrivée } n &= L_n + 1, \\
 \text{départs avant l'arrivée } n + 1 &= \min(A_n,\ L_n + 1), \\
@@ -248,18 +257,20 @@ L_{n+1} &= L_n + 1 - \min(A_n,\ L_n + 1) \\
 \end{align*}
 \begin{center}\includegraphics[width=\linewidth]{../../sujets/sujet4/figures/s4_1_recurrence.png}\end{center}
 \vspace{-0.4em}
-\lecture Sur ces 12 arrivées ($\lambda = 1$, $\mu = 1{,}2$), la récurrence redonne exactement les $L_n$
-de la trajectoire. Entre les arrivées 3 et 4, $A_3 = 6$ services possibles pour un seul client : cinq
-sont perdus, c'est le rôle du $\max(0, \cdot)$.
+\lecture Sur les 12 arrivées ($\lambda = 1$, $\mu = 1{,}2$), la récurrence reproduit exactement les
+valeurs de $L_n$ de la trajectoire. Entre les arrivées 3 et 4, $A_3 = 6$ services possibles pour un seul
+client : cinq sont perdus, ce qui correspond à l'effet du $\max(0, \cdot)$.
 
 \newpage
 \question{Q2 · Algorithme de simulation}
-On assemble les outils précédents : l'écart entre deux arrivées par inversion, $A_n$ par comptage
-(sachant l'écart $s$, $A_n$ suit $\mathcal P(\mu s)$ par B.3), puis la récurrence de la Q1.
+On combine les outils précédents : l'écart entre deux arrivées est obtenu par inversion, $A_n$ est
+compté (pour un écart $s$, $A_n$ suit une loi $\mathcal P(\mu s)$ d'après B.3), puis on applique la
+récurrence de la Q1.
 \begin{lstlisting}
 t, l = -np.log(1 - rng.random()) / lam, 0      # T_1 ; L_1 = 0 (file vide)
 while t <= duree:
-    T.append(t); L.append(l)
+    T.append(t)
+    L.append(l)
     s = -np.log(1 - rng.random()) / lam        # écart entre deux arrivées
     A = nombre_points_poisson(mu, s, rng)      # services possibles (Poisson)
     l = max(0, l + 1 - A)                      # récurrence de la Q1
@@ -267,48 +278,63 @@ while t <= duree:
 \end{lstlisting}
 \begin{center}\includegraphics[width=\linewidth]{../../sujets/sujet4/figures/s4_2_algorithme.png}\end{center}
 \vspace{-0.4em}
-\lecture Avec $\lambda = 100$ et $\mu = 120$ : 226 clients en 2 s (environ $\lambda \times 2 = 200$). La file
-part de 0, monte et redescend ; les 10 premiers clients trouvent $0, 0, 1, 2, 3, 0, 1, 1, 0, 0$
-personnes devant eux.
+\lecture Avec $\lambda = 100$ et $\mu = 120$, on observe 226 clients en 2 s ($\approx \lambda \times 2 = 200$).
+La file commence à 0, monte puis diminue. Le nombre de personnes devant les dix premiers clients
+redescend : ils trouvent $0, 0, 1, 2, 3, 0, 1, 1, 0, 0$ personnes.
 
-\question{Q3 · $\rho > 1$ : la file croît indéfiniment}
-Chaque arrivée ajoute un client, et entre deux arrivées il part au plus $A_n$ clients. Comme
+\newpage
+\question{Q3 · $\rho > 1$ : la file augmente sans limite}
+Chaque arrivée ajoute un client. Entre deux arrivées, au plus $A_n$ clients partent. On a toujours
 $\max(0, y) \ge y$ :
 \begin{align*}
 L_{n+1} &\ge L_n + 1 - A_n, \\
-L_n &\ge S_n = \sum_{k < n} (1 - A_k), \\
-E[A_k] &= \mu \times E[\text{écart}] = \frac{\mu}{\lambda} = \frac{1}{\rho}, \\
-\frac{S_n}{n} &\longrightarrow 1 - \frac{1}{\rho} > 0 && \text{(loi des grands nombres).}
+L_n &\ge S_n = \sum_{k < n} (1 - A_k).
 \end{align*}
-Donc $L_n$ croît comme $n(1 - 1/\rho)$, soit environ $\lambda - \mu$ clients de plus par seconde.
+L'espérance de $A_k$ vaut $\mu$ fois l'espérance de l'écart :
+\begin{align*}
+E[A_k] &= \mu \times \frac{1}{\lambda} = \frac{\mu}{\lambda} = \frac{1}{\rho}.
+\end{align*}
+Par la loi des grands nombres,
+\begin{align*}
+\frac{S_n}{n} &\longrightarrow 1 - \frac{1}{\rho} > 0.
+\end{align*}
+Donc $L_n$ croît comme $n(1 - 1/\rho)$, soit environ $\lambda - \mu$ clients supplémentaires chaque seconde.
 \begin{center}\includegraphics[width=0.92\linewidth]{../../sujets/sujet4/figures/s4_3_rho_sup_1.png}\end{center}
 \vspace{-0.4em}
-\lecture $\rho = 1{,}2$ ($\lambda = 120$, $\mu = 100$) : \textbf{1120 clients} après 60 s, $19{,}7$ de plus
-par seconde (théorie 20), $L_n/n = 0{,}157$ pour $1 - 1/\rho = 0{,}167$. Avec 5 \% de surcharge : 362
-clients.
+\lecture $\rho = 1{,}2$ ($\lambda = 120$, $\mu = 100$). Après 60 s, on compte \textbf{1120 clients}, soit
+$19{,}7$ clients de plus chaque seconde (théorie $\approx 20$). On observe $L_n/n = 0{,}157$ alors que
+$1 - 1/\rho = 0{,}167$. Avec 5 \% de surcharge, on obtient 362 clients.
 
 \newpage
-\question{Q4 · $\rho < 1$ : la file se stationnarise}
-Même calcul, mais $1 - 1/\rho < 0$ : la somme $S_n$ descend, et la file revient sans cesse à 0 au lieu
-de dériver. On le vérifie par simulation sur 2 minutes.
+\question{Q4 · $\rho < 1$ : la file se stabilise}
+Le même calcul donne $1 - 1/\rho < 0$. Ainsi la somme $S_n$ diminue et la file revient constamment à
+zéro au lieu de diverger. La simulation sur deux minutes confirme ce comportement.
 \begin{center}\includegraphics[width=0.92\linewidth]{../../sujets/sujet4/figures/s4_4_rho_inf_1.png}\end{center}
 \vspace{-0.4em}
-\lecture $\mu = 100$ et $\lambda = 60$ puis $90$ : la file revient sans cesse à 0 et ne dérive pas
-(maxima observés 14 et 51). La moyenne cumulée se stabilise près de $\rho/(1-\rho)$ : $1{,}49$ pour
-$1{,}5$ ; avec $\rho = 0{,}9$, encore $7{,}9$ pour 9 après 2 minutes. Plus $\rho$ est proche de 1, plus
-le niveau est haut et plus la stabilisation est lente.
+\lecture $\mu = 100$ et $\lambda = 60$ puis $\lambda = 90$. La file revient toujours à zéro, les maxima
+observés sont 14 et 51. La moyenne cumulée se stabilise près de $\rho/(1-\rho)$ : $1{,}49$ pour $1{,}5$
+($\rho = 0{,}6$) ; avec $\rho = 0{,}9$, la moyenne atteint $7{,}9$ après deux minutes. Plus $\rho$ se
+rapproche de 1, plus le niveau moyen est élevé et plus la stabilisation est lente.
 
+\newpage
 \question{Q5 · $\lambda = 100$, $\mu = 120$ pendant 5 minutes}
-Ici $\rho = 100/120 = 5/6$. La simulation suit la loi géométrique $P(L = k) = (1-\rho)\rho^k$ (figure).
-On en déduit, avec $\sum_{k \ge 0} \rho^k = \frac{1}{1-\rho}$ et sa dérivée
-$\sum_{k \ge 1} k\rho^{k-1} = \frac{1}{(1-\rho)^2}$ :
+Ici $\rho = 100/120 = 5/6$. La simulation suit la loi géométrique (figure) :
+\begin{align*}
+P(L = k) &= (1-\rho)\,\rho^k.
+\end{align*}
+On utilise les sommes suivantes :
+\begin{align*}
+\sum_{k \ge 0} \rho^k &= \frac{1}{1-\rho}, \\
+\sum_{k \ge 1} k\rho^{k-1} &= \frac{1}{(1-\rho)^2}.
+\end{align*}
+Valeurs théoriques :
 \begin{align*}
 E[L] &= \sum_{k \ge 0} k(1-\rho)\rho^k = (1-\rho)\,\rho \sum_{k \ge 1} k\rho^{k-1} = \frac{\rho}{1-\rho}, \\
 \operatorname{Var}L &= \frac{\rho}{(1-\rho)^2} && \text{(même méthode, dérivée seconde)}, \\
 P(L = 0) &= 1 - \rho, \\
 P(L > 5) &= \sum_{k \ge 6} (1-\rho)\rho^k = \rho^6.
 \end{align*}
-\begin{center}\includegraphics[width=0.88\linewidth]{../../sujets/sujet4/figures/s4_5_simulation_5min.png}\end{center}
+\begin{center}\includegraphics[width=0.85\linewidth]{../../sujets/sujet4/figures/s4_5_simulation_5min.png}\end{center}
 \vspace{-0.4em}
 {\small
 \renewcommand{\arraystretch}{1.15}
@@ -323,28 +349,32 @@ Plus de 5 clients devant soi & $\rho^6$ & $0{,}335$ & $0{,}338$ & $+1{,}0$ \% \\
 \end{tabularx}}
 
 
-\lecture La file, vide au départ, fluctue autour de 5 sans dériver (pointes à 51), et sa loi suit
-$(1-\rho)\rho^k$ sur trois ordres de grandeur. Les valeurs simulées ont le bon ordre de grandeur, à
-quelques pour cent près : une seule simulation de 5 minutes reste aléatoire. La variance s'écarte le
-plus, car elle dépend des quelques longues files.
+\lecture La file commence vide, puis elle oscille autour de 5 clients sans jamais diverger (les pointes
+atteignent 51). Sa distribution suit $(1-\rho)\rho^k$ sur trois ordres de grandeur. Les valeurs obtenues
+par simulation sont du même ordre, à quelques pour cent près ; une simulation de 5 minutes reste très
+variable. La variance s'écarte le plus, parce qu'elle dépend des rares files très longues.
 
+\newpage
 \question{Conclusion}
-\noindent\begin{minipage}[c]{0.5\linewidth}
 La loi exponentielle (moyenne = écart-type = $1/\lambda$, seule loi sans mémoire) et la loi de Poisson
-se simulent en quelques lignes. Assemblées, elles donnent la file M/M/1, dont le comportement dépend
-de la charge $\rho = \lambda/\mu$ : si $\rho > 1$, la file grossit sans fin ; si $\rho < 1$, elle se
-stabilise, mais sa longueur moyenne $\rho/(1-\rho)$ explose quand $\rho$ approche 1. Avec $\rho = 5/6$ :
-5 clients en moyenne, un client sur six servi tout de suite, un sur trois derrière plus de 5 personnes.
-\end{minipage}\hfill
-\begin{minipage}[c]{0.46\linewidth}
-\includegraphics[width=\linewidth]{../../sujets/sujet4/figures/s4_synthese_rho.png}\\[-0.3em]
-{\footnotesize\color{gris8}Points : file moyenne simulée (5 minutes par point, $\mu = 100$) ; trait : $\rho/(1-\rho)$.}
-\end{minipage}
+se programment en quelques lignes. Assemblées, elles donnent le modèle de file M/M/1, dont le
+comportement dépend de la charge $\rho = \lambda/\mu$ :
+\begin{itemize}\setlength\itemsep{0.1em}
+\item si $\rho > 1$, la file croît indéfiniment ;
+\item si $\rho < 1$, la file se stabilise, mais la longueur moyenne $\rho/(1-\rho)$ augmente très vite
+quand $\rho$ s'approche de 1.
+\end{itemize}
+Avec $\rho = 5/6$ : on observe en moyenne 5 clients, un client sur six est servi immédiatement, et un
+client sur trois se retrouve derrière plus de 5 personnes.
+
+\vspace{0.8em}
+\begin{center}\includegraphics[width=0.8\linewidth]{../../sujets/sujet4/figures/s4_synthese_rho.png}\\[-0.2em]
+{\footnotesize\color{gris8}Les points de la simulation correspondent à une moyenne sur 5 minutes ($\mu = 100$), la courbe théorique étant $\rho/(1-\rho)$.}\end{center}
 % ---------- Annexe : Matlab / Python ----------
 \newpage
-\question{Annexe · Le même TD en Matlab et en Python}
-Le même code en Matlab (exécuté sous GNU Octave 8.4) et en Python (scripts dans
-\texttt{sujets/sujet4/matlab/}).
+\question{Annexe · Le même TP réalisé en Matlab et en Python}
+Le même code en Matlab, exécuté sous GNU Octave 8.4, et le même code en Python ; les scripts sont placés
+dans le répertoire \texttt{sujets/sujet4/matlab/}.
 
 \lstdefinestyle{petit}{basicstyle=\ttfamily\footnotesize}
 \noindent
@@ -414,7 +444,7 @@ L.mean(), L.var(ddof=1), np.mean(L == 0), np.mean(L > 5)
 \begin{minipage}[t]{0.495\linewidth}
 {\small\bfseries\color{violet8}Sortie Octave} {\small\color{gris8}(Mersenne Twister, graine 2026)}
 \begin{lstlisting}[language={},style=petit]
-P(4) : moyenne 4.0519, variance 4.0064
+P(4) : moyenne 4.0519 et variance 4.0064
 n = 30174 clients, file max 46
 E[L]   = 4.9854 (théorie 5.0000)
 Var L  = 30.8240 (théorie 30.0000)
@@ -425,7 +455,7 @@ P(L>5) = 0.3318 (théorie 0.3349)
 \begin{minipage}[t]{0.495\linewidth}
 {\small\bfseries\color{violet8}Sortie Python} {\small\color{gris8}(PCG64, graine 2026)}
 \begin{lstlisting}[language={},style=petit]
-P(4) : moyenne 4.0241, variance 3.9699
+P(4) : moyenne 4.0241 et variance 3.9699
 n = 30075 clients, file max 31
 E[L]   = 4.8069 (théorie 5.0000)
 Var L  = 23.5177 (théorie 30.0000)
@@ -435,9 +465,10 @@ P(L>5) = 0.3355 (théorie 0.3349)
 \end{minipage}
 
 \vspace{0.2em}
-\lecture Mêmes algorithmes, générateurs différents : les tirages diffèrent, les ordres de grandeur
-sont les mêmes. La variance est la plus instable (23,5 et 30,8 pour 30) car elle dépend des rares
-longues files. \texttt{var} de Matlab divise par $n - 1$, comme \texttt{ddof=1} en numpy.
+\lecture Les mêmes algorithmes, mais des générateurs différents, donnent des tirages différents tout
+en conservant les mêmes ordres de grandeur. La variance est la plus instable (23,5 et 30,8 pour 30) car
+elle dépend des rares longues files. La fonction \texttt{var} de Matlab divise par $n - 1$, comme
+\texttt{ddof=1} en numpy.
 
 \vspace{-0.4em}
 \begin{center}\includegraphics[width=\linewidth,height=5.2cm,keepaspectratio]{../../sujets/sujet4/figures/s4_octave.png}\\[-0.2em]
