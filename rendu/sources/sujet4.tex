@@ -86,20 +86,19 @@ $n$-ième arrive.
 
 \begin{tcbraster}[raster columns=4,raster equal height,raster column skip=6pt,raster before skip=2pt,raster after skip=4pt]
 \carte{violet8}{$\boldsymbol{\rho = 5/6}$}{Charge de la Q5 : 100 arrivées/s pour 120 services/s. C'est $\rho = \lambda/\mu$ qui décide de tout.}
-\carte{violet8}{5 clients}{présents en moyenne quand un client arrive : $\frac{\rho}{1-\rho}$ ; simulé $5{,}03 \pm 0{,}36$.}
-\carte{rouge8}{1 sur 6}{trouve le serveur libre : $1 - \rho = 16{,}7$ \% ; simulé $16{,}2$ \%.}
-\carte{rouge8}{1 sur 3}{trouve plus de 5 clients devant lui : $\rho^6 = 33{,}5$ \% ; simulé $34{,}0$ \%.}
+\carte{violet8}{5 clients}{présents en moyenne quand un client arrive : $\frac{\rho}{1-\rho}$ ; simulé $5{,}13$.}
+\carte{rouge8}{1 sur 6}{trouve le serveur libre : $1 - \rho = 16{,}7$ \% ; simulé $15{,}9$ \%.}
+\carte{rouge8}{1 sur 3}{trouve plus de 5 clients devant lui : $\rho^6 = 33{,}5$ \% ; simulé $33{,}8$ \%.}
 \end{tcbraster}
 
 {\bfseries\color{violet8}À retenir.}
 \begin{itemize}[topsep=1pt,itemsep=1pt]
 \item \textbf{$\rho < 1$ : la file se stabilise} et suit la loi géométrique $(1-\rho)\rho^k$. Sur
-  5 minutes simulées (30\,070 clients), les trois indicateurs s'écartent de la théorie de moins d'une
-  erreur-type.
+  5 minutes simulées (30\,155 clients), les valeurs simulées sont à quelques pour cent de la théorie.
 \item \textbf{$\rho > 1$ : la file croît sans fin}, d'environ $\lambda - \mu$ clients par seconde :
-  1099 clients après une minute à $\rho = 1{,}2$, et 316 avec seulement 5 \% de surcharge.
-\item \textbf{Près de $\rho = 1$, tout se dégrade très vite} : file moyenne de 4 clients à
-  $\rho = 0{,}8$, 9 à $0{,}9$, 19 à $0{,}95$ (figure en conclusion, page~\pageref{conclusion}).
+  1120 clients après une minute à $\rho = 1{,}2$, et 362 avec seulement 5 \% de surcharge.
+\item \textbf{Près de $\rho = 1$, tout se dégrade très vite} : en théorie, file moyenne de 4 clients
+  à $\rho = 0{,}8$, 9 à $0{,}9$, 19 à $0{,}95$ (figure en conclusion, page~\pageref{conclusion}).
 \end{itemize}
 
 {\bfseries\color{violet8}Les réponses en bref} {\small\color{gris8}(preuves en annexe A, page~\pageref{annexeA})}\par
@@ -110,13 +109,13 @@ $n$-ième arrive.
  & \textbf{Résultat} & \textbf{Page} \\ \midrule
 A.1 & Loi $\mathcal E(\lambda)$ : moyenne et écart-type égaux, $E[X] = \sigma_X = 1/\lambda$ & \pageref{qA} \\
 A.2 & Sans mémoire : $P(X \ge x + t \mid X \ge x) = e^{-\lambda t} = P(X \ge t)$ & \pageref{qA} \\
-A.3 & $G(x+t) = G(x)G(t)$ et $G$ monotone $\Rightarrow G(x) = e^{-\lambda x}$ : seule loi (à densité) sans mémoire & \pageref{qA} \\
+A.3 & $G(x) = P(X \ge x)$ : $G(x+t) = G(x)G(t)$ et $G$ monotone $\Rightarrow G(x) = e^{-\lambda x}$, seule loi sans mémoire & \pageref{qA} \\
 B.1 & $X_1, X_2$ indépendantes : $X_1 + X_2$ a pour densité $f * g$ & \pageref{qB} \\
 B.2 & $T_k = I_1 + \dots + I_k$ suit la loi d'Erlang $f_k(x) = \frac{\lambda^k x^{k-1}}{(k-1)!}e^{-\lambda x}$ & \pageref{qB} \\
-B.3 & $P(N_t = k) = F_k(t) - F_{k+1}(t) = e^{-\lambda t}\frac{(\lambda t)^k}{k!}$ : $N_t \sim \mathcal P(\lambda t)$ & \pageref{qB} \\
+B.3 & $P(N_t = k) = F_k(t) - F_{k+1}(t) = e^{-\lambda t}\frac{(\lambda t)^k}{k!}$ ($F_k$ : répartition de $T_k$) & \pageref{qB} \\
 Sim. 1, 2 & $-\frac1\lambda \ln U \sim \mathcal E(\lambda)$ ; pour $\mathcal P(\lambda)$, compter les sommes d'exponentielles $\le 1$ & \pageref{qB} \\
 Q1 & $L_{n+1} = (L_n + 1 - A_n)^+$, $A_n$ = services possibles entre deux arrivées & \pageref{q1} \\
-Q2 & Algorithme écrit, puis validé contre deux autres simulations du même modèle & \pageref{q2} \\
+Q2 & Boucle sur les arrivées : écart par inversion, $A_n$ par comptage, puis la récurrence & \pageref{q2} \\
 Q3 & $\rho > 1$ : $L_n / n \to 1 - 1/\rho$, la file gagne $\lambda - \mu$ clients par seconde & \pageref{q3} \\
 Q4 & $\rho < 1$ : régime stationnaire, moyenne cumulée $\to \rho/(1-\rho)$ & \pageref{q4} \\
 Q5 & $E[L] = \frac{\rho}{1-\rho}$, $\operatorname{Var}L = \frac{\rho}{(1-\rho)^2}$, $P(L = 0) = 1 - \rho$, $P(L > 5) = \rho^6$ & \pageref{q5} \\
@@ -138,7 +137,7 @@ $(1-\rho)\rho^k < 0$). B.2 : $I_n$ sépare le $(n-1)$-ième et le $n$-ième év�
 
 \question{A · La loi exponentielle (A.1 à A.3)}\label{qA}
 \resultat $E[X] = \sigma_X = 1/\lambda$ ; $P(X \ge x + t \mid X \ge x) = e^{-\lambda t} = P(X \ge t)$ ;
-et c'est la seule loi à densité qui vérifie cette propriété.
+et c'est la seule loi qui vérifie cette propriété pour tous $x, t \ge 0$.
 \begin{lstlisting}
 X = -np.log(1 - rng.random(100_000)) / lam   # inversion (Simulation Q1), λ = 2
 reste = X[X >= x] - x                         # durée de vie restante à l'âge x
@@ -194,43 +193,30 @@ while t <= duree:
 \end{lstlisting}
 \end{minipage}
 
-\vspace{0.2em}
-\noindent\begin{minipage}[c]{0.56\linewidth}
-{\small
-\renewcommand{\arraystretch}{1.12}
-\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}X rrr@{}}
-\toprule
-$\lambda = 100$, $\mu = 120$, 5 min & $E[L]$ & $P(L{=}0)$ & $P(L{>}5)$ \\ \midrule
-\textcolor{violet8}{\textbf{théorie}} & 5 & 0,167 & 0,335 \\
-récurrence (l'algorithme) & 4,96 & 0,155 & 0,349 \\
-Lindley vectorisée & 5,05 & 0,165 & 0,338 \\
-simulation directe FIFO & 5,20 & 0,161 & 0,349 \\
-\bottomrule
-\end{tabularx}}
-\end{minipage}\hfill
-\begin{minipage}[c]{0.41\linewidth}
-\lecture Trois simulations du même modèle : la seconde tire tous les points de $N(t)$ d'un coup,
-la troisième donne à chaque client son propre service. Tous les écarts à la théorie font au plus
-2 erreurs-types.
-\end{minipage}
+\begin{center}\includegraphics[width=0.94\linewidth]{../../sujets/sujet4/figures/s4_2_algorithme.png}\end{center}
+\vspace{-0.6em}
+\lecture Avec les paramètres de la Q5 : 226 clients en 2 s (environ $\lambda \times 2 = 200$). La file part
+de 0, monte et redescend ; les 10 premiers clients trouvent $0, 0, 1, 2, 3, 0, 1, 1, 0, 0$ personnes
+devant eux. L'algorithme n'utilise que l'inversion (écarts), le comptage ($A_n$) et la récurrence.
 
 \question{Q3 · $\rho > 1$ : la file croît indéfiniment}\label{q3}
 \noindent\begin{minipage}{\linewidth}
-\begin{center}\includegraphics[width=0.88\linewidth]{../../sujets/sujet4/figures/s4_3_rho_sup_1.png}\end{center}
+\begin{center}\includegraphics[width=0.8\linewidth]{../../sujets/sujet4/figures/s4_3_rho_sup_1.png}\end{center}
 \vspace{-0.6em}
-\lecture $\rho = 1{,}2$ ($\lambda = 120$, $\mu = 100$) : \textbf{1099 clients} après 60 s, environ
-$18{,}4$ de plus par seconde (théorie $\lambda - \mu = 20$), $L_n/n = 0{,}154$ pour $1 - 1/\rho = 0{,}167$.
-Avec 5 \% de surcharge : 316 clients, $L_n / n = 0{,}050$ pour $0{,}048$. Raison :
-$L_n \ge \sum_{k<n}(1 - A_k) \approx n(1 - 1/\rho)$ (loi des grands nombres).
+\lecture Il arrive $\lambda$ clients par seconde, le serveur en traite au plus $\mu$ : si $\lambda > \mu$,
+la file gagne environ $\lambda - \mu$ clients par seconde. $\rho = 1{,}2$ ($\lambda = 120$, $\mu = 100$) :
+\textbf{1120 clients} après 60 s, $19{,}7$ de plus par seconde (théorie 20), $L_n/n = 0{,}157$ pour
+$1 - 1/\rho = 0{,}167$. Avec 5 \% de surcharge : 362 clients. Preuve : $L_n \ge \sum_{k<n}(1 - A_k)$,
+qui croît comme $n(1 - 1/\rho)$ par la loi des grands nombres (annexe A).
 \end{minipage}
 
 \question{Q4 · $\rho < 1$ : la file se stationnarise}\label{q4}
-\begin{center}\includegraphics[width=0.96\linewidth]{../../sujets/sujet4/figures/s4_4_rho_inf_1.png}\end{center}
+\begin{center}\includegraphics[width=0.88\linewidth]{../../sujets/sujet4/figures/s4_4_rho_inf_1.png}\end{center}
 \vspace{-0.6em}
 \lecture $\mu = 100$ et $\lambda = 60$ puis $90$, pendant 2 minutes : la file revient sans cesse à 0
-et reste bornée (maximum 14 et 64). La moyenne cumulée se fixe sur $\rho/(1-\rho)$ :
-$1{,}44 \pm 0{,}08$ pour $1{,}5$, et $10{,}1 \pm 1{,}8$ pour 9. Plus $\rho$ est proche de 1, plus le
-niveau est haut et plus la stabilisation est lente.
+et ne dérive pas (maxima observés 14 et 51). La moyenne cumulée se stabilise près de $\rho/(1-\rho)$ :
+$1{,}49$ pour $1{,}5$ ; avec $\rho = 0{,}9$, encore $7{,}9$ pour 9 après 2 minutes. Plus $\rho$ est proche
+de 1, plus le niveau est haut et plus la stabilisation est lente.
 
 \question{Q5 · $\lambda = 100$, $\mu = 120$ pendant 5 minutes}\label{q5}
 \begin{center}\includegraphics[width=\linewidth]{../../sujets/sujet4/figures/s4_5_simulation_5min.png}\end{center}
@@ -239,18 +225,18 @@ niveau est haut et plus la stabilisation est lente.
 \renewcommand{\arraystretch}{1.15}
 \begin{tabularx}{\linewidth}{@{}>{\leavevmode\color{violet8}\bfseries}X >{\centering\arraybackslash}p{2.3cm} rrr@{}}
 \toprule
-$\rho = 5/6$, 30\,070 clients & \textbf{Formule} & \textbf{Théorie} & \textbf{Simulation} & \textbf{Écart} \\ \midrule
-Moyenne de la longueur & $\rho/(1-\rho)$ & 5 & $5{,}03 \pm 0{,}36$ & $+0{,}08$ e.-t. \\
-Variance de la longueur & $\rho/(1-\rho)^2$ & 30 & $29{,}1$ & \\
-Serveur libre à l'arrivée & $1 - \rho$ & $0{,}167$ & $0{,}162 \pm 0{,}010$ & $-0{,}51$ e.-t. \\
-Plus de 5 clients devant soi & $\rho^6$ & $0{,}335$ & $0{,}340 \pm 0{,}023$ & $+0{,}22$ e.-t. \\
+$\rho = 5/6$, 30\,155 clients & \textbf{Formule} & \textbf{Théorie} & \textbf{Simulation} & \textbf{Écart} \\ \midrule
+Moyenne de la longueur & $\rho/(1-\rho)$ & 5 & $5{,}13$ & $+2{,}6$ \% \\
+Variance de la longueur & $\rho/(1-\rho)^2$ & 30 & $32{,}5$ & $+8{,}4$ \% \\
+Serveur libre à l'arrivée & $1 - \rho$ & $0{,}167$ & $0{,}159$ & $-4{,}4$ \% \\
+Plus de 5 clients devant soi & $\rho^6$ & $0{,}335$ & $0{,}338$ & $+1{,}0$ \% \\
 \bottomrule
 \end{tabularx}}
 
-\lecture La file, vide au départ, fluctue autour de 5 sans dériver (pointes à 35), et sa loi suit
-$(1-\rho)\rho^k$ sur trois ordres de grandeur. Les $L_n$ successifs sont très corrélés ($0{,}97$
-d'un client au suivant) : les erreurs-types viennent de 30 lots d'environ 10 s (méthode des lots),
-11 fois plus grandes que $\hat\sigma/\sqrt n$. Tous les écarts restent sous une erreur-type.
+\lecture La file, vide au départ, fluctue autour de 5 sans dériver (pointes à 51), et sa loi suit
+$(1-\rho)\rho^k$ sur trois ordres de grandeur. Les valeurs simulées ont le bon ordre de grandeur, à
+quelques pour cent près (une seule simulation de 5 minutes reste aléatoire). La variance s'écarte le
+plus : elle dépend des quelques longues files.
 
 \vspace{0.4em}
 \label{conclusion}
@@ -258,16 +244,16 @@ d'un client au suivant) : les erreurs-types viennent de 30 lots d'environ 10 s (
 \textbf{\color{violet8}Conclusion.} La charge $\rho = \lambda/\mu$ fixe le comportement de la file.
 Si $\rho > 1$, elle grossit sans fin. Si $\rho < 1$, elle se stabilise sur une loi géométrique, mais
 la file moyenne $\rho/(1-\rho)$ explose quand $\rho$ approche 1. Avec $\rho = 5/6$ : 5 clients en
-moyenne, un client sur six servi tout de suite, un sur trois derrière plus de 5 personnes, et
-$1/(\mu - \lambda) = 50$ ms passées en moyenne dans le système.
+moyenne, un client sur six servi tout de suite, et un sur trois derrière plus de 5 personnes.
 \end{minipage}\hfill
 \begin{minipage}[c]{0.47\linewidth}
 \includegraphics[width=\linewidth]{../../sujets/sujet4/figures/s4_synthese_rho.png}\\[-0.3em]
-{\footnotesize\color{gris8}Simulation de 5 minutes par point ($\mu = 100$), barres à $\pm 2$ erreurs-types.}
+{\footnotesize\color{gris8}Points : file moyenne simulée (5 minutes par point, $\mu = 100$) ; trait : $\rho/(1-\rho)$.}
 \end{minipage}
 
 % ---------- Annexe A : démonstrations ----------
-\newpage
+\vspace{1.2em}
+{\color{violet8}\rule{\linewidth}{0.4pt}}
 \question{Annexe A · Démonstrations}\label{annexeA}
 {\small\color{gris8}Version condensée ; le détail (et les remarques pour l'oral) est dans
 \texttt{sujets/sujet4/demonstrations.md}. Notations : $G(x) = P(X \ge x)$, $T_0 = 0$.}
@@ -282,11 +268,11 @@ $\boxed{E[X] = \sigma_X = 1/\lambda}$.
 \textbf{\color{violet8}A.2} Pour $x, t \ge 0$, $\{X \ge x + t\} \subset \{X \ge x\}$, donc
 $P(X \ge x+t \mid X \ge x) = \frac{G(x+t)}{G(x)} = \frac{e^{-\lambda(x+t)}}{e^{-\lambda x}} = e^{-\lambda t} = G(t)$.
 
-\textbf{\color{violet8}A.3} Si $X \ge 0$ a une densité et $G > 0$, $(*)$ s'écrit
+\textbf{\color{violet8}A.3} Si $X \ge 0$, $G > 0$ et $(*)$ vaut pour tous $x, t \ge 0$ réels, alors
 $G(x+t) = G(x)G(t)$. $\varphi = \ln G$ est additive et décroissante. Par récurrence
-$\varphi(nx) = n\varphi(x)$, d'où $\varphi(r) = r\varphi(1)$ pour $r$ rationnel ; en encadrant $x$
+$\varphi(nx) = n\varphi(x)$, d'où $\varphi(r) = r\varphi(1)$ pour $r \ge 0$ rationnel ; en encadrant $x$
 par des rationnels $r \le x \le r'$ (monotonie), $\varphi(x) = x\varphi(1)$. Avec
-$\lambda = -\varphi(1)$ : $G(x) = e^{-\lambda x}$, et $\lambda > 0$ car $G(x) \to 0$.
+$\lambda = -\varphi(1) \ge 0$ ($G$ décroît) : $G(x) = e^{-\lambda x}$, et $\lambda \ne 0$ car $G(x) \to 0$.
 
 \textbf{\color{violet8}B.1} Par indépendance, la densité du couple est $f(x_1)g(x_2)$ :
 $P(Z \le z) = \int f(x_1)\int_{-\infty}^{z - x_1} g(x_2)\,dx_2\,dx_1$. Avec $x_2 = s - x_1$ puis
@@ -316,7 +302,8 @@ uniformes.
 $\mu$ quel que soit son âge (A.2) : les départs sont les points d'un processus de Poisson $N$
 d'intensité $\mu$, ceux qui tombent quand la file est vide étant perdus. Après $T_n$ il y a $L_n + 1$
 clients, il en part $\min(A_n, L_n + 1)$, d'où $L_{n+1} = (L_n + 1 - A_n)^+$. Sachant
-$T_{n+1} - T_n = s$, $A_n \sim \mathcal P(\mu s)$, d'où
+$T_{n+1} - T_n = s$, $A_n \sim \mathcal P(\mu s)$ ($N$ est indépendant des arrivées et ses accroissements
+sur des intervalles disjoints sont indépendants : les $A_n$ sont indépendants et de même loi), d'où
 $P(A_n = k) = \int_0^\infty \lambda e^{-\lambda s}e^{-\mu s}\frac{(\mu s)^k}{k!}ds = p\,q^k$ avec
 $p = \frac{\lambda}{\lambda+\mu}$, $q = \frac{\mu}{\lambda+\mu}$ : loi géométrique, $E[A_n] = \mu/\lambda$.
 
@@ -324,13 +311,10 @@ $p = \frac{\lambda}{\lambda+\mu}$, $q = \frac{\mu}{\lambda+\mu}$ : loi géométr
 Lindley $L_n = S_n - \min_{k \le n}S_k \ge S_n$. Par la loi forte des grands nombres,
 $S_n/n \to 1 - \frac1\rho > 0$ si $\rho > 1$ : $L_n \to \infty$ et $L_n/n \to 1 - \frac1\rho$.
 
-\textbf{\color{violet8}Q4} Si $\rho < 1$, $S_n \to -\infty$ : la file revient sans cesse à 0. La
-chaîne $(L_n)$ est irréductible, apériodique et récurrente positive : $L_n$ converge en loi vers
-l'unique loi stationnaire $\pi$, et $\frac1n\sum_k L_k \to E_\pi[L]$ (théorème ergodique).
+\textbf{\color{violet8}Q4} Si $\rho < 1$, $S_n/n \to 1 - \frac1\rho < 0$ : $S_n \to -\infty$, le minimum
+de Lindley est sans cesse battu et $L_n = 0$ une infinité de fois : la file ne dérive pas.
 
-\textbf{\color{violet8}Q5} Si $L_n \sim \pi_k = (1-\rho)\rho^k$, pour $j \ge 1$ :
-$P(L_{n+1} = j) = \sum_{m \ge 0}\pi_{j-1+m}\,p\,q^m = (1-\rho)\rho^{j-1}\frac{p}{1-\rho q}$. Or
-$\rho q = p$, donc $\frac{p}{1 - \rho q} = \frac pq = \rho$ : $\pi$ est stationnaire. Avec
+\textbf{\color{violet8}Q5} La loi $P(L = k) = (1-\rho)\rho^k$ est vérifiée par simulation. On en déduit, avec
 $\sum_k k\rho^k = \frac{\rho}{(1-\rho)^2}$ et
 $\sum_k k(k-1)\rho^k = \frac{2\rho^2}{(1-\rho)^3}$ :
 $E[L] = \frac{\rho}{1-\rho}$, $\operatorname{Var}L = \frac{2\rho^2}{(1-\rho)^2} + \frac{\rho}{1-\rho} - \frac{\rho^2}{(1-\rho)^2} = \frac{\rho}{(1-\rho)^2}$,

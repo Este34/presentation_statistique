@@ -46,11 +46,10 @@ F^c(x) = P(X \ge x) = \mathbb 1_{\mathbb R^+}(x)\exp(-\lambda x) + \mathbb 1_{\m
 3. Montrer que la loi exponentielle est la seule loi sans mémoire c'est-à-dire la seule loi
    vérifiant $(*)$.
 
-   > ⚠️ **Précision** : « la seule » parmi les lois **à densité** sur $\mathbb R^+$ (ou plus
-   > généralement les lois sur $\mathbb R^+$ avec $0 < P(X \ge x) $ pour tout $x$). La relation
-   > $(*)$ doit être lue pour tous $x, t \ge 0$. Les cas dégénérés $P(X \ge x) = 0$ (où la
-   > probabilité conditionnelle n'a pas de sens) et la masse en 0 sont exclus ; en discret, la
-   > loi géométrique est elle aussi sans mémoire. Voir [demonstrations.md](demonstrations.md#a3).
+   > ⚠️ **Précision** : « la seule » parmi les lois sur $\mathbb R^+$ avec $P(X \ge x) > 0$ pour tout
+   > $x$ (sinon la probabilité conditionnelle n'a pas de sens), la relation $(*)$ étant demandée pour
+   > **tous** $x, t \ge 0$ réels. Si on ne l'impose que pour des entiers, la loi géométrique convient
+   > aussi (absence de mémoire discrète). Voir [demonstrations.md](demonstrations.md#a3).
 
 La loi exponentielle est très souvent utilisée pour modéliser des durées (durée de vie d'une
 ampoule, temps de service d'un client, durée d'exécution d'une tâche sur une chaîne de

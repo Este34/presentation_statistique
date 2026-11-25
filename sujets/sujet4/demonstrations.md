@@ -68,8 +68,9 @@ la propriété qui rend la file M/M/1 simple à étudier.
 
 ## A.3 · L'exponentielle est la seule loi sans mémoire
 
-Hypothèses : $X \ge 0$ est une variable à densité (donc $P(X = x) = 0$ pour tout $x$) et
-$G(x) = P(X \ge x) > 0$ pour tout $x \ge 0$ (sinon le conditionnement de $(*)$ n'a pas de sens).
+Hypothèses : $X \ge 0$, $G(x) = P(X \ge x) > 0$ pour tout $x \ge 0$ (sinon le conditionnement de
+$(*)$ n'a pas de sens), et $(*)$ vaut pour **tous** $x, t \ge 0$ réels. Aucune hypothèse de densité
+n'est nécessaire : la preuve ne l'utilise pas.
 
 **Étape 1 : équation fonctionnelle.** Comme à la question A.2, $(*)$ s'écrit
 $\frac{G(x+t)}{G(x)} = G(t)$, soit
@@ -88,7 +89,8 @@ Ainsi $\varphi(r) = r\,\varphi(1)$ pour tout rationnel $r \ge 0$.
 Par décroissance, $\varphi(r') \le \varphi(x) \le \varphi(r)$, soit $r'\varphi(1) \le \varphi(x) \le r\varphi(1)$.
 En faisant tendre $r$ et $r'$ vers $x$ (les rationnels sont denses), $\varphi(x) = x\,\varphi(1)$.
 
-**Étape 5 : conclusion.** On pose $\lambda = -\varphi(1) = -\ln G(1) \ge 0$. Si $\lambda = 0$, alors
+**Étape 5 : conclusion.** On pose $\lambda = -\varphi(1) = -\ln G(1)$, qui est $\ge 0$ car
+$G(1) \le 1$. Si $\lambda = 0$, alors
 $G \equiv 1$ : $P(X \ge x) = 1$ pour tout $x$, impossible pour une variable réelle
 ($P(X \ge x) \to 0$ quand $x \to +\infty$). Donc $\lambda > 0$ et
 ```math
@@ -99,8 +101,9 @@ $t = 0$ : $G'(x) = G'(0)\,G(x)$, équation différentielle de solution $G(x) = e
 (car $G(0) = 1$). On retrouve $\lambda = -G'(0) = f(0)$.
 
 **Remarques utiles à l'oral.**
-- L'hypothèse « à densité » compte : en **discret**, la loi géométrique est elle aussi sans mémoire
-  ($P(X \ge n + m \mid X \ge n) = P(X \ge m)$). L'exponentielle est son analogue continu.
+- Ce qui compte, c'est que $(*)$ vaille pour **tous** $x, t \ge 0$ réels. La loi géométrique ne
+  vérifie $(*)$ que pour des entiers ($P(X \ge n + m \mid X \ge n) = P(X \ge m)$) : c'est la version
+  discrète de l'absence de mémoire, et l'exponentielle est son analogue continu.
 - La monotonie remplace la continuité : sans aucune régularité, l'équation de Cauchy a des
   solutions « pathologiques », mais une fonction monotone n'en fait pas partie.
 
@@ -175,8 +178,8 @@ $\{T_{k+1} \le t\} \subset \{T_k \le t\}$, donc, en notant $F_k$ la fonction de 
 ```math
 P(N_t = k) = P(T_k \le t) - P(T_{k+1} \le t) = F_k(t) - F_{k+1}(t).
 ```
-**IPP** sur $F_{k+1}(t) = \int_0^t \frac{\lambda^{k+1}u^{k}}{k!}e^{-\lambda u}du$, avec $U = \frac{(\lambda u)^k}{k!}$
-et $V' = \lambda e^{-\lambda u}$ (donc $V = -e^{-\lambda u}$), pour $k \ge 1$ :
+**IPP** sur $F_{k+1}(t) = \int_0^t \frac{\lambda^{k+1}u^{k}}{k!}e^{-\lambda u}du$, avec $a(u) = \frac{(\lambda u)^k}{k!}$
+et $b'(u) = \lambda e^{-\lambda u}$ (donc $b(u) = -e^{-\lambda u}$), pour $k \ge 1$ :
 ```math
 F_{k+1}(t) = \Big[-\frac{(\lambda u)^k}{k!}e^{-\lambda u}\Big]_0^t + \int_0^t \frac{\lambda^k u^{k-1}}{(k-1)!}e^{-\lambda u}\,du
            = -e^{-\lambda t}\frac{(\lambda t)^k}{k!} + F_k(t).
@@ -280,8 +283,10 @@ P(A_n = k) = \int_0^\infty \lambda e^{-\lambda s}\, e^{-\mu s}\frac{(\mu s)^k}{k
 (avec $\int_0^\infty s^k e^{-as}ds = k!/a^{k+1}$, $a = \lambda + \mu$). C'est une loi **géométrique**
 sur $\{0, 1, 2, \dots\}$ : on compte les services avant la prochaine arrivée, comme dans une course
 entre deux horloges exponentielles où le service gagne avec probabilité $q$. Moyenne
-$E[A_n] = q/p = \mu/\lambda = 1/\rho$. Les $A_n$ portent sur des intervalles **disjoints** : ils sont
-indépendants entre eux et indépendants de $L_n$ (qui ne dépend que de $A_1, \dots, A_{n-1}$).
+$E[A_n] = q/p = \mu/\lambda = 1/\rho$. **Indépendance** : $N$ est indépendant des arrivées et ses nombres de points sur
+des intervalles **disjoints** sont indépendants (accroissements indépendants) ; les écarts
+$T_{n+1} - T_n$ sont indépendants. Donc les $A_n$ sont indépendants et de même loi, et $A_n$ est
+indépendant de $L_n$ (qui ne dépend que de $A_1, \dots, A_{n-1}$).
 $(L_n)$ est donc une **chaîne de Markov** : une marche aléatoire réfléchie en 0.
 
 ---
@@ -304,8 +309,9 @@ $T_n$ (sommes cumulées de $\mathcal E(\lambda)$) et tous les points de $N$ sur 
 (`np.searchsorted`). La récurrence elle-même se vectorise par la **formule de Lindley**
 ci-dessous.
 
-**Validation indépendante** (notebook) : une simulation « à événements » directe de la file
-(chaque client a son propre temps de service $\mathcal E(\mu)$, FIFO) donne la même loi de $L_n$.
+**Validation indépendante** (hors rendu, voir `file_mm1_evenements` dans `src/stats_td/files_attente.py`) :
+une simulation « à événements » directe de la file (chaque client a son propre temps de service
+$\mathcal E(\mu)$, FIFO) donne la même loi de $L_n$.
 
 ---
 
@@ -344,12 +350,19 @@ non plus.
 
 ## M/M/1, Q4 · Si $\rho < 1$, la file se stationnarise
 
-Si $\rho < 1$, $E[\Delta] = 1 - 1/\rho < 0$ : $S_n \to -\infty$ et la file revient sans cesse à 0
-(chaîne **récurrente positive**). Une chaîne de Markov irréductible (on passe de tout état à tout
-état), apériodique ($P(0 \to 0) > 0$) et récurrente positive a une **unique** loi stationnaire
-$\pi$, et :
+Si $\rho < 1$, $E[\Delta] = 1 - 1/\rho < 0$ : par la loi des grands nombres $S_n \to -\infty$, le
+minimum de Lindley est sans cesse battu et $L_n = 0$ une infinité de fois : la file ne dérive pas.
+C'est ce qui est présenté dans le rendu (l'énoncé demande de le **montrer par simulation**).
+
+**Hors rendu : convergence en loi.** $(L_n)$ est une chaîne de Markov irréductible (on passe de tout
+état à tout état) et apériodique ($P(0 \to 0) > 0$). La loi géométrique $\pi$ de la Q5 est
+**invariante** ; une chaîne irréductible qui admet une probabilité invariante est **récurrente
+positive** et cette probabilité est unique. Avec l'apériodicité :
 - $L_n$ converge **en loi** vers $\pi$ quel que soit le départ (ici la file vide) ;
 - **théorème ergodique** : $\frac{1}{n}\sum_{k=1}^n L_k \to E_\pi[L]$ presque sûrement.
+
+Attention : revenir en 0 une infinité de fois prouve seulement la récurrence, pas la récurrence
+**positive** (c'est aussi vrai pour $\rho = 1$, récurrent nul) ; d'où le passage par $\pi$.
 
 C'est ce que montre la simulation : la trajectoire fluctue autour d'un niveau fixe et la moyenne
 cumulée se stabilise sur $\rho/(1-\rho)$ (Q5).
@@ -360,7 +373,10 @@ cumulée se stabilise sur $\rho/(1-\rho)$ (Q5).
 
 ## M/M/1, Q5 · La loi stationnaire est géométrique : $\pi_k = (1-\rho)\rho^k$
 
-**Vérification de l'invariance.** Supposons $L_n \sim \pi$ et montrons $L_{n+1} \sim \pi$. Pour
+L'énoncé demande de **vérifier par simulation** cette loi, puis d'en déduire les formules ci-dessous.
+La preuve qui suit est hors rendu.
+
+**Vérification de l'invariance (hors rendu).** Supposons $L_n \sim \pi$ et montrons $L_{n+1} \sim \pi$. Pour
 $j \ge 1$, $L_{n+1} = j$ exige $A_n = L_n + 1 - j \ge 0$. En posant $m = A_n$ et en utilisant
 l'indépendance de $L_n$ et $A_n$ :
 ```math
@@ -370,8 +386,8 @@ P(L_{n+1} = j) = \sum_{m \ge 0}\pi_{j-1+m}\,p\,q^m = (1-\rho)\rho^{j-1}\,p\sum_{
 Or $\rho q = \frac{\lambda}{\mu}\cdot\frac{\mu}{\lambda+\mu} = p$, donc $1 - \rho q = 1 - p = q$ et
 $\frac{p}{1-\rho q} = \frac{p}{q} = \frac{\lambda}{\mu} = \rho$ :
 $P(L_{n+1} = j) = (1-\rho)\rho^{j}$. Pour $j = 0$ le résultat suit car les probabilités somment à
-1. (La série converge car $\rho q < 1$.) Donc $\pi$ est invariante, et par Q4 c'est **la** loi
-limite :
+1. (La série converge car $\rho q < 1$.) Donc $\pi$ est invariante ; la chaîne étant irréductible
+et apériodique, elle est récurrente positive et $\pi$ est **la** loi limite (Q4, hors rendu) :
 ```math
 \boxed{P(L_n = k) \xrightarrow[n\to\infty]{} (1-\rho)\rho^k,\qquad \rho = \frac{\lambda}{\mu} < 1.}
 ```
@@ -399,13 +415,13 @@ dérive une série entière terme à terme dans son disque de convergence).
 - **Pourquoi « juste avant une arrivée » donne la même loi que « à un instant quelconque »** :
   propriété PASTA (*Poisson Arrivals See Time Averages*) : des arrivées poissoniennes voient la
   file dans son état moyen. (Pour des arrivées régulières, ce serait faux.)
-- **Temps moyen passé dans le système** par un client : il attend la fin des $L$ services devant
+- **Temps moyen passé dans le système** (hors rendu) par un client : il attend la fin des $L$ services devant
   lui puis le sien, chacun de moyenne $1/\mu$ (absence de mémoire pour le client en cours), d'où
   $E[W] = \frac{E[L] + 1}{\mu} = \frac{1}{\mu - \lambda} = 50$ ms. On retrouve la **formule de
   Little** $E[L] = \lambda\,E[W]$ : $100 \times 0{,}05 = 5$.
 - **$\rho$ proche de 1** : $E[L] = \rho/(1-\rho)$ explose. Passer de $\rho = 0{,}8$ à $0{,}9$
-  double la file moyenne (4 puis 9) ; à $0{,}99$ elle vaut 99. C'est le message « capital » du TD.
-- **Incertitude de la simulation** : les $L_n$ successifs sont **corrélés** (la file change d'au
+  fait plus que doubler la file moyenne (4 puis 9) ; à $0{,}99$ elle vaut 99. C'est le message « capital » du TD.
+- **Incertitude de la simulation** (hors rendu) : les $L_n$ successifs sont **corrélés** (la file change d'au
   plus 1 vers le haut entre deux arrivées). L'erreur-type naïve $\hat\sigma/\sqrt n$ est trop
   optimiste ; on utilise la **méthode des lots** (moyennes de blocs de 10 s, à peu près
-  indépendantes). Voir le notebook, Q5.
+  indépendantes). Voir le notebook expliqué, Q5 (📎).

@@ -1,6 +1,8 @@
 # Sujet 4 · Questions probables du jury
 
 Niveaux : **N1** définition / restitution · **N2** démonstration / calcul · **N3** « et si… », recul.
+Les questions marquées **(hors rendu)** portent sur des notions retirées du PDF : si le jury les pose,
+réponds avec l'idée simple donnée, sans entrer dans la preuve.
 Chiffres : notebook `s4_1_file_mm1.ipynb` (graine 2026), voir [fiche_revision.md](fiche_revision.md).
 
 ---
@@ -29,8 +31,9 @@ l'intersection (il faut $t \ge 0$) ou que $G(x) > 0$.
 
 **5. (N3) Pourquoi est-ce la seule loi sans mémoire ? Quelles hypothèses ?**
 *Attendu* : $G(x+t) = G(x)G(t)$, $\ln G$ additive et monotone, donc linéaire (rationnels puis
-densité). Hypothèses : loi à densité sur $\mathbb R^+$, $G > 0$. En discret, la géométrique est aussi
-sans mémoire. *Piège* : « par continuité » sans dire d'où vient la continuité (ici la monotonie suffit).
+densité). Hypothèses : $G > 0$ et $(*)$ pour **tous** $x, t \ge 0$ réels (la loi géométrique n'est
+sans mémoire que pour des $x, t$ entiers). *Piège* : « par continuité » sans dire d'où vient la
+continuité (ici la monotonie suffit).
 
 **6. (N3) Une ampoule réelle est-elle sans mémoire ?**
 *Attendu* : non, elle s'use : sa durée de vie restante diminue avec l'âge (comme Erlang(2) dans le
@@ -101,49 +104,52 @@ $A \sim \mathcal P(\mu s)$ par comptage, $l \leftarrow \max(0, l + 1 - A)$, $t \
 jusqu'à 300 s. File vide au départ : $L_1 = 0$.
 
 **19. (N2) Comment avez-vous vérifié que l'algorithme est juste ?**
-*Attendu* : trois simulations du même modèle (récurrence, version vectorisée par la formule de
-Lindley, simulation directe FIFO avec un service par client) donnent les mêmes indicateurs, à moins
-de 2 erreurs-types ; et ils collent à la théorie. Plus des tests automatiques (pytest).
+*Attendu* : la loi simulée de $L_n$ suit $(1-\rho)\rho^k$ (une droite en échelle log) et les
+indicateurs collent à la théorie à quelques pour cent près ($5{,}13$ pour 5, $0{,}159$ pour $0{,}167$,
+$0{,}338$ pour $0{,}335$) ; plus des tests automatiques (pytest). Bonus (hors rendu) : deux autres
+simulations du même modèle, dans `src/stats_td/files_attente.py`, donnent les mêmes valeurs.
 
 **20. (N2) Pourquoi la file croît-elle indéfiniment si $\rho > 1$ ? À quelle vitesse ?**
 *Attendu* : $L_n \ge S_n = \sum_{k<n}(1 - A_k)$ et $S_n/n \to 1 - 1/\rho > 0$ (loi forte des grands
-nombres). En temps : $(\lambda - \mu)\,t$. Mesuré : 1099 clients après 60 s à $\rho = 1{,}2$ (pente
-$18{,}4$/s pour 20). *Piège* : dire « elle croît car il arrive plus de clients » sans quantifier.
+nombres). En temps : $(\lambda - \mu)\,t$. Mesuré : 1120 clients après 60 s à $\rho = 1{,}2$ (pente
+$19{,}7$/s pour 20). *Piège* : dire « elle croît car il arrive plus de clients » sans quantifier.
 
 **21. (N3) Et si $\rho = 1$ exactement ?**
 *Attendu* : marche aléatoire sans dérive, récurrente **nulle** : la file revient à 0 mais de plus en
 plus rarement et croît comme $\sqrt n$. Pas de régime stationnaire ($\rho/(1-\rho)$ infini).
 
 **22. (N2) Que veut dire « la file se stationnarise » ?**
-*Attendu* : la **loi** de $L_n$ converge (vers $(1-\rho)\rho^k$), pas la trajectoire, qui continue
-de fluctuer. Conséquence (théorème ergodique) : la moyenne cumulée converge vers $\rho/(1-\rho)$.
-*Piège* : dire que $L_n$ devient constant.
+*Attendu* : la **loi** de $L_n$ se stabilise (vers $(1-\rho)\rho^k$), pas la trajectoire, qui continue
+de fluctuer : la file revient sans cesse à 0 et la moyenne cumulée se stabilise ($1{,}49$ pour $1{,}5$
+à $\rho = 0{,}6$). *Piège* : dire que $L_n$ devient constant. Bonus (hors rendu) : chaîne de Markov
+récurrente positive, théorème ergodique.
 
-**23. (N2) Montrez que $(1-\rho)\rho^k$ est stationnaire.**
-*Attendu* : $P(L_{n+1} = j) = \sum_m \pi_{j-1+m}\,p q^m = (1-\rho)\rho^{j-1}\frac{p}{1-\rho q}$ et
-$\rho q = p$ donc $\frac{p}{1-\rho q} = \frac pq = \rho$.
+**23. (N3, hors rendu) D'où vient $(1-\rho)\rho^k$ ?**
+*Attendu* : l'énoncé demande de le **vérifier par simulation**, c'est ce que j'ai fait (la loi simulée
+suit la droite en échelle log). Pour aller plus loin : on vérifie que cette loi se reproduit par la
+récurrence, grâce à l'identité $\rho q = p$.
 
 **24. (N2) Calculez $E[L]$, $\operatorname{Var}L$, $P(\text{serveur libre})$, $P(L > 5)$ pour $\rho = 5/6$.**
 *Attendu* : $\frac{\rho}{1-\rho} = 5$ ; $\frac{\rho}{(1-\rho)^2} = 30$ ; $1 - \rho = 1/6$ ;
-$\rho^6 = 0{,}335$. Simulé : $5{,}03 \pm 0{,}36$ ; $29{,}1$ ; $0{,}162 \pm 0{,}010$ ; $0{,}340 \pm 0{,}023$.
+$\rho^6 = 0{,}335$. Simulé : $5{,}13$ ; $32{,}5$ ; $0{,}159$ ; $0{,}338$.
 *Piège* : $P(L > 5) = \rho^5$ (c'est $P(L \ge 5)$).
 
-**25. (N2) Votre erreur-type sur la moyenne est $0{,}36$ avec 30 000 valeurs. Pourquoi si grande ?**
-*Attendu* : les $L_n$ successifs sont corrélés (autocorrélation $0{,}97$ entre deux clients) : il y
-a beaucoup moins de 30 000 informations indépendantes. $\hat\sigma/\sqrt n = 0{,}031$ serait 11 fois
-trop optimiste. Méthode des lots : 30 moyennes de blocs de 10 s, à peu près indépendantes.
-*Piège* : utiliser $\hat\sigma/\sqrt n$ et conclure que l'écart de $0{,}03$ est significatif.
+**25. (N3) Vos valeurs simulées ne tombent pas exactement sur la théorie. Est-ce grave ?**
+*Attendu* : non, une simulation est aléatoire : sur 5 minutes, des écarts de quelques pour cent sont
+normaux ($+2{,}6$ % sur la moyenne). La variance s'écarte le plus ($+8{,}4$ %) car elle dépend des rares
+longues files. *Piège* : vouloir quantifier avec $\hat\sigma/\sqrt n$ : les $L_n$ successifs sont
+corrélés, cette formule serait trop optimiste (bonus hors rendu : méthode des lots).
 
 **26. (N3) La file part vide. Est-ce un problème ?**
 *Attendu* : la loi géométrique est la loi **limite**. Le régime transitoire dure quelques secondes
 (temps de relaxation de l'ordre de la seconde) ; sur 300 s l'effet est faible : sans les 10
-premières secondes, moyenne $4{,}88$ au lieu de $5{,}03$, bien dans l'erreur-type.
+premières secondes, moyenne $5{,}06$ au lieu de $5{,}13$ : presque pareil.
 
 **27. (N3) La loi de $L_n$ (vue par les arrivants) est-elle la même que celle de $L(t)$ à un instant quelconque ?**
 *Attendu* : oui pour des arrivées poissoniennes : propriété PASTA (*Poisson Arrivals See Time
 Averages*). Question bonus, hors programme strict.
 
-**28. (N3) Combien de temps un client passe-t-il en moyenne dans le système ?**
+**28. (N3, hors rendu) Combien de temps un client passe-t-il en moyenne dans le système ?**
 *Attendu* : $L$ services devant lui plus le sien, chacun de moyenne $1/\mu$ (absence de mémoire pour
 celui en cours) : $E[W] = \frac{E[L] + 1}{\mu} = \frac{1}{\mu - \lambda} = 50$ ms. Formule de Little
 $E[L] = \lambda E[W]$. Question bonus.
@@ -161,3 +167,10 @@ qualitatif : tout explose quand $\rho \to 1$.
 **31. (N1) Quelles coquilles avez-vous relevées dans l'énoncé ?**
 *Attendu* : $\rho = \mu/\lambda$ en Q5 (il faut $\lambda/\mu$, sinon probabilités négatives) ; indice de
 $I_n$ en B.2 ; « capacité du serveur » pour « de la salle d'attente » ; « cet= algorithme ».
+
+**32. (N2) Que veut dire « test du $\chi^2$ : $p = 0{,}37$ » pour la loi de Poisson simulée ?**
+*Attendu* : le test compare les effectifs observés $O_k$ aux effectifs attendus $E_k = T\,P(N = k)$,
+via $\sum (O_k - E_k)^2/E_k$. $p$ = probabilité d'un écart au moins aussi grand **si** la loi est
+$\mathcal P(4)$. $p = 0{,}37$ : rien d'anormal (on rejetterait si $p < 0{,}01$ ou $0{,}05$). Même idée
+pour le test KS (loi continue, plus grand écart entre les fonctions de répartition). *Piège* : dire
+« $p = 0{,}37$ donc c'est prouvé » : un test ne prouve pas, il ne détecte pas d'anomalie.
