@@ -5,13 +5,12 @@ Journal des séances de préparation (la plus récente en haut).
 ## Acquis (à tenir à jour)
 
 - **Connu de la licence MIASHS** (déclaré par Esteban) : loi de Poisson, loi exponentielle,
-  intégration par parties.
-- **Vérifié en séance** : moyenne et écart-type de $\mathcal E(\lambda)$ par IPP ; absence de mémoire ;
-  unicité de l'exponentielle (énoncée comme résultat) ; inversion $-\ln(1-U)/\lambda$ (même loi que
-  $U$ : oui ; rôle du $1 -$ pour éviter $\ln 0$ : à retenir).
-- **Pas encore maîtrisé** (hors rendu pour l'instant) : densité d'une somme (convolution) et loi
-  d'Erlang ; récurrence de la file M/M/1 (Q1) ; tests KS et $\chi^2$ ; erreur-type et méthode des
-  lots ; chaînes de Markov.
+  intégration par parties, test du $\chi^2$, loi des grands nombres ; loi Gamma « peut-être ».
+- **Acquis** (déclaré ou vérifié) : moyenne et écart-type de $\mathcal E(\lambda)$ par IPP ; absence de
+  mémoire ; unicité de l'exponentielle (énoncée comme résultat) ; inversion $-\ln(1-U)/\lambda$ (rôle du
+  $1 -$ : éviter $\ln 0$) ; récurrence de la file M/M/1 (Q1, considérée acquise à sa demande).
+- **Pas connu** (hors rendu) : loi d'Erlang et convolution ; test de Kolmogorov-Smirnov ; chaînes
+  de Markov ; méthode des lots.
 - **Préférences** : pas de questions de détail ; le rendu ne reprend que ce qu'il connaît ou a
   choisi d'apprendre ; résultats de cours admis plutôt que redémontrés.
 
