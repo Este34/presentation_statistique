@@ -15,6 +15,11 @@ Journal des séances de préparation (la plus récente en haut).
 - **À retravailler si on rajoute** : convolution (B.1) avant Erlang (B.2) ; densité ≠ probabilité.
 - Après relecture, **inversion remise** dans le PDF à sa demande (simulation de $\mathcal E(\lambda)$ par
   $-\ln(1-U)/\lambda$), mise en page aérée, une équation par ligne. Compréhension de l'inversion à vérifier.
+- Question « pourquoi $1 - U$ ? » : 🟡 (même loi que $U$ : oui ; raison du $1 -$, éviter $\ln 0$ : manquait).
+- **Cadre fixé par Esteban** : pas de questions de détail ; le rendu ne reprend que ce qu'il connaît de
+  sa licence MIASHS (loi de Poisson, loi exponentielle, intégration par parties). A.3 réduit au
+  résultat ; ajout de B.3 ($N_t \sim \mathcal P(\lambda t)$, résultat de cours) et de la simulation de
+  $\mathcal P(\lambda)$ par comptage.
 
 ## 2026-11-25 · Sujet 4 (file M/M/1) · tri des notions
 

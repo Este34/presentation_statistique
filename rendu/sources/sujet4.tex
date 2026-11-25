@@ -64,7 +64,7 @@ Master Informatique I2A\\Année 2026-2027\end{minipage}
 \vspace{0.5em}
 {\fontsize{24}{29}\selectfont\bfseries TP4 : Étude de la file d'attente M/M/1\par}
 \vspace{0.5em}
-{\large\color{violet8}Partie A : la loi exponentielle et l'absence de mémoire\par}
+{\large\color{violet8}Loi exponentielle, absence de mémoire et loi de Poisson\par}
 \vspace{0.6em}
 {\color{violet8}\rule{0.32\linewidth}{2pt}}{\color{rouge8}\rule{0.18\linewidth}{2pt}}\par
 \vspace{0.7em}
@@ -81,9 +81,10 @@ Master Informatique I2A\\Année 2026-2027\end{minipage}
 
 % ---------- Synthèse ----------
 \vspace{0.6em}{\large\bfseries\color{violet8}Synthèse}\par\vspace{0.3em}
-Dans la file M/M/1, les temps de service suivent une loi exponentielle. Ce rendu étudie cette loi
-(partie A du sujet) et la façon de la simuler : sa moyenne et son écart-type, la propriété qui la
-caractérise (l'absence de mémoire), et sa simulation par inversion.
+Dans la file M/M/1, les temps de service suivent une loi exponentielle et les arrivées un processus
+de Poisson. Ce rendu étudie ces deux briques : la loi exponentielle (moyenne, écart-type, absence de
+mémoire), sa simulation par inversion, puis la loi de Poisson qui compte les événements et sa
+simulation.
 
 \vspace{0.4em}
 {\small
@@ -95,6 +96,8 @@ A.1 & $E[X] = \sigma_X = 1/\lambda$ : moyenne et écart-type égaux & intégrati
 A.2 & $P(X \ge x + t \mid X \ge x) = P(X \ge t)$ : ce qui reste à attendre ne dépend pas de ce qui est écoulé & inclusion des événements \\
 A.3 & c'est la \textbf{seule} loi sans mémoire & $G(x+t) = G(x)G(t)$ force $G(x) = e^{-\lambda x}$ \\
 Simulation & $X = -\frac{1}{\lambda}\ln U$ suit $\mathcal E(\lambda)$ si $U \sim \mathcal U[0, 1]$ & l'exponentielle est croissante \\
+B.3 & le nombre $N_t$ d'événements dans $[0, t]$ suit la loi de Poisson $\mathcal P(\lambda t)$ & résultat de cours \\
+Simulation & compter les durées $\mathcal E(\lambda)$ qui tiennent dans $[0, 1]$ donne $\mathcal P(\lambda)$ & B.3 avec $t = 1$ \\
 \bottomrule
 \end{tabularx}}
 
@@ -141,22 +144,15 @@ P(X \ge x + t \mid X \ge x) &= \frac{P(X \ge x + t,\ X \ge x)}{P(X \ge x)} \\
 Si $X$ est une durée de vie, la durée de vie restante ne dépend pas de l'âge.
 
 % ---------- A.3 ----------
-\question{A.3 · La seule loi sans mémoire}
-On note $G(x) = P(X \ge x)$, avec $G(x) > 0$, et on suppose la propriété vraie pour tous
-$x, t \ge 0$. Comme en A.2, elle s'écrit :
+\newpage
+\vspace{0.5em}{\large\bfseries\color{violet8}A.3 · La seule loi sans mémoire}\par\vspace{0.4em}
+Avec $G(x) = P(X \ge x)$, l'absence de mémoire s'écrit (comme en A.2) :
 \begin{align*}
-G(x + t) &= G(x)\,G(t).
+G(x + t) &= G(x)\,G(t) \qquad \text{pour tous } x, t \ge 0.
 \end{align*}
-Avec $\varphi = \ln G$, qui est décroissante :
-\begin{align*}
-\varphi(x + t) &= \varphi(x) + \varphi(t), \\
-\varphi(n x) &= n\,\varphi(x) && \text{(récurrence sur } n\text{)}, \\
-\varphi(p/q) &= \tfrac{p}{q}\,\varphi(1) && \text{(rationnels)}, \\
-\varphi(x) &= x\,\varphi(1) && \text{(réels, par monotonie)}.
-\end{align*}
-En posant $\lambda = -\varphi(1) > 0$ :
+La seule fonction positive et décroissante qui vérifie cette relation est l'exponentielle :
 \begin{center}
-\fcolorbox{violet8}{fond}{\ $G(x) = e^{-\lambda x}$ : $X$ suit une loi exponentielle\ }
+\fcolorbox{violet8}{fond}{\ $G(x) = e^{-\lambda x}$ : une loi sans mémoire est forcément exponentielle\ }
 \end{center}
 
 \begin{center}\includegraphics[width=\linewidth]{../../sujets/sujet4/figures/s4a_theorie.png}\end{center}
@@ -190,10 +186,43 @@ reste = X[X >= x] - x                          # durée de vie restante à l'âg
 probabilité de durer encore $0{,}5$ vaut $0{,}366$ ; $0{,}368$ et $0{,}369$, contre $e^{-1} = 0{,}368$ :
 l'absence de mémoire se voit aussi sur les valeurs simulées (A.2).
 
+\newpage
+% ---------- Poisson ----------
+\question{B.3 · Le nombre d'événements suit une loi de Poisson}
+Dans un processus de Poisson d'intensité $\lambda$, les durées entre deux événements sont
+indépendantes et suivent $\mathcal E(\lambda)$. Le nombre $N_t$ d'événements dans $[0, t]$ suit alors la
+loi de Poisson de paramètre $\lambda t$ (résultat de cours) :
+\begin{align*}
+P(N_t = k) &= e^{-\lambda t}\,\frac{(\lambda t)^k}{k!}, \qquad k = 0, 1, 2, \dots \\
+E[N_t] &= \lambda t.
+\end{align*}
+$\lambda$ est donc bien le nombre moyen d'événements par unité de temps.
+
+\question{Simulation · Tirer une loi de Poisson en comptant}
+Avec $t = 1$, $N_1$ suit $\mathcal P(\lambda)$. Pour le simuler, on additionne des durées
+$\mathcal E(\lambda)$ (tirées par inversion) tant que la somme reste $\le 1$, et on compte :
+\begin{align*}
+N &= \text{nombre de sommes } Z_i = X_1 + \dots + X_i \text{ telles que } Z_i \le 1.
+\end{align*}
+\begin{lstlisting}
+def nombre_points_poisson(lam, duree, rng):     # loi P(lam * duree)
+    n, Z = 0, -np.log(1 - rng.random()) / lam   # première durée exponentielle
+    while Z <= duree:                           # l'événement tombe dans [0, duree]
+        n += 1
+        Z += -np.log(1 - rng.random()) / lam    # on ajoute la durée suivante
+    return n
+\end{lstlisting}
+\begin{center}\includegraphics[width=\linewidth]{../../sujets/sujet4/figures/s4b_poisson_rendu.png}\end{center}
+\vspace{-0.4em}
+\lecture À gauche, $\lambda = 2$ sur $[0, 3]$ : les fréquences suivent $\mathcal P(6)$, moyenne $5{,}99$
+pour $\lambda t = 6$. À droite, $\lambda = 4$ sur $[0, 1]$ : moyenne $3{,}99$ et variance $3{,}96$, les deux
+proches de 4 (pour une loi de Poisson, moyenne et variance sont égales).
+
 \question{Conclusion}
 La loi exponentielle a une moyenne et un écart-type égaux à $1/\lambda$, et c'est la seule loi sans
-mémoire. On la simule avec une seule ligne, $-\ln(1 - U)/\lambda$. Pour la file M/M/1, l'absence de
-mémoire veut dire qu'un client en cours de service a toujours un temps restant de même loi, quel que
-soit le temps déjà passé.
+mémoire ; on la simule en une ligne, $-\ln(1 - U)/\lambda$. En mettant bout à bout des durées
+exponentielles, on obtient un processus de Poisson, dont le nombre d'événements suit la loi de Poisson :
+c'est ainsi qu'on la simule. Ce sont les deux briques de la file M/M/1 : arrivées poissoniennes et
+temps de service exponentiels.
 \label{fin}
 \end{document}
